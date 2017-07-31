@@ -1,0 +1,14 @@
+package com.meitianhui.supplierCentre.service;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.meitianhui.supplierCentre.entity.AuditFlow;
+
+public interface AuditFlowService {
+
+	public void addAuditFlow(AuditFlow auditFlow);
+
+	public List<AuditFlow> queryAuditFlow(@Param("supplier_id")String supplier_id);
+}

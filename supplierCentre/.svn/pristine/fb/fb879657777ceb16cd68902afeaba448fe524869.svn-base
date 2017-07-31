@@ -1,0 +1,34 @@
+package com.meitianhui.supplierCentre.controller;
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.meitianhui.supplierCentre.constant.PreGoodConstant;
+
+
+@Controller
+public class IndexController {
+	//private Log logger = LogFactory.getLog(IndexController.class);
+	
+	@RequestMapping("index")
+	public String index(HttpServletRequest request){
+		return "index";
+	}
+	
+	@RequestMapping("zsindex")
+	public String zsindex(HttpServletRequest request){
+		return "main/attract";
+	}
+	@RequestMapping("zxindex")
+	public String zxindex(HttpServletRequest request){
+		request.setAttribute("laytab", PreGoodConstant.key1);
+		return "main/news";
+	}
+	@RequestMapping("zxdetail")
+	public String zxdetail(HttpServletRequest request){
+		return "main/newsdetail";
+	}
+}

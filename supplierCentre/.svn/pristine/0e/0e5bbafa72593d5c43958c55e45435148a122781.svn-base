@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%
+       request.setAttribute("laytab", "news");
+    %>
+    
+<%@ include file="/common/layout/header.jsp"%>
+	<div class="banner-wrap"><img src="${ctx}/common/static/images/banner2.jpg"></div>
+	<div class="content">
+		<div class="god-title">最新资讯</div>
+		<ul class="information-list">
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx1.jpg"></a>
+				<div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx2.jpg"></a>
+				<div class="ti">赢在2016年度大会精彩瞬间</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx3.jpg"></a>
+				<div class="ti">赢在2016之惠言慧语</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx1.jpg"></a>
+				<div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx2.jpg"></a>
+				<div class="ti">赢在2016年度大会精彩瞬间</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx3.jpg"></a>
+				<div class="ti">赢在2016之惠言慧语</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+		</ul>
+		<div class="pages">
+			<a class="sel">1</a>
+			<a>2</a>
+			<a>3</a>
+		</div>
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+

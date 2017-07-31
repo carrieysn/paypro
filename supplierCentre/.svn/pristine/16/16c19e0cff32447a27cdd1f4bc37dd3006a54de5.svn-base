@@ -1,0 +1,83 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>每天惠商家中心</title>    
+    <link type="text/css" href="${ctx}/common/static/css/base.css" rel="stylesheet" />
+    <link type="text/css" href="${ctx}/common/static/css/index.css" rel="stylesheet" />
+    <link type="text/css" href="${ctx}/common/static/css/amazeui.slick.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="${ctx}/common/static/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="${ctx}/common/static/js/slick.min.js"></script>
+</head> --%>
+<%@ include file="/common/layout/header.jsp"%>
+	<div class="slider single-item banner">
+	  <div><h3><img src="${ctx}/common/static/images/banner.jpg"></h3></div>
+	  <div><h3><img src="${ctx}/common/static/images/banner.jpg"></h3></div>
+	  <div><h3><img src="${ctx}/common/static/images/banner.jpg"></h3></div>
+	  <div><h3><img src="${ctx}/common/static/images/banner.jpg"></h3></div>
+	</div>
+	<div class="title">招商<a href="#" class="more">+ MORE</a></div>
+	<div dir="rtl" class="slider single-item-rtl merchants-slider">
+	  <div><h3>
+	  	<img src="${ctx}/common/static/images/zs1.jpg">
+	  	<p class="btn-list">
+			<a href="${ctx}/zsindex" class="tj">推荐商品</a>
+			<a href="${ctx}/login">查看状态</a>
+		</p>
+	  </h3></div>
+	  <div><h3><img src="${ctx}/common/static/images/zs1.jpg"><p class="btn-list">
+					<a href="${ctx}/zsindex" class="tj">推荐商品</a>
+					<a href="${ctx}/login">查看状态</a>
+				</p></h3></div>
+	  <div><h3><img src="${ctx}/common/static/images/zs2.jpg"><p class="btn-list">
+					<a href="${ctx}/zsindex" class="tj-l">推荐商品</a>
+					<a href="${ctx}/login">查看状态</a>
+				</p></h3></div>
+	</div>
+	<div class="content">
+		<div class="title">资讯<a href="#" class="more">+ MORE</a></div>
+		<ul class="information-list">
+			<li>
+				<a><img src="${ctx}/common/static/images/zx1.jpg"></a>
+				<div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a><img src="${ctx}/common/static/images/zx2.jpg"></a>
+				<div class="ti">赢在2016年度大会精彩瞬间</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+			</li>
+			<li>
+				<a><img src="${ctx}/common/static/images/zx3.jpg"></a>
+				<div class="ti">赢在2016之惠言慧语</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+		</ul>
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+
+<script>
+	$(function(){
+
+		//banner
+		$('.single-item').slick({
+		  dots: true,
+		  infinite: true,
+		  speed: 500,
+		  slidesToShow: 1,
+		  slidesToScroll: 1
+		});
+
+
+		//招商
+		$('.single-item-rtl').slick({
+		  dots: true,
+		  infinite: true,
+		  speed: 500,
+		  slidesToShow: 1,
+		  slidesToScroll: 1,
+		  rtl: true
+		});
+	})
+</script>

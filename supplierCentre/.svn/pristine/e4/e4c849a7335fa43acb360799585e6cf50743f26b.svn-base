@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.supplierCentre.dao.LoggerMapper">
+	
+	<!-- 根据供应商id查询流程信息 -->
+	<select id="queryAuditLogger" parameterType="String" resultType="AuditLogger">
+	 SELECT DATE_FORMAT(tracked_date, '%Y-%m-%d %H:%i:%s') tracked_date,event_desc,category FROM ed_pre_supplier_log 
+	WHERE supplier_id=#{supplier_id} order by tracked_date desc
+	</select>
+	
+	<!-- 保存单条导入记录 -->
+	<insert id="addAuditLogger" parameterType="AuditLogger">
+		INSERT INTO ed_pre_supplier_log (log_id,supplier_id,category,tracked_date,event_desc) VALUES
+		(#{log_id},#{supplier_id},#{category},#{tracked_date},#{event_desc})
+	</insert>	
+</mapper>

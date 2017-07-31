@@ -1,0 +1,29 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+ <%
+       request.setAttribute("laytab", "attract");
+ %>
+<%@ include file="/common/layout/header.jsp"%>
+	
+	<div class="banner-wrap"><img src="${ctx}/common/static/images/banner3.jpg"></div>
+
+	<div class="content">
+		<ul class="merchants top50">
+			<li>
+				<img src="${ctx}/common/static/images/zs1.jpg">
+				<p class="btn-list">
+					<a href="${ctx}/presupplier/recommend" class="tj">商品报名</a>
+					<a href="${ctx}/login">查看状态</a>
+				</p>
+			</li>
+			<li>
+				<img src="${ctx}/common/static/images/zs2.jpg">
+				<p class="btn-list">
+					<a href="${ctx}/presupplier/recommend" class="tj-l">商品报名</a>
+					<a href="${ctx}/login">查看状态</a>
+				</p>
+			</li>
+		</ul>
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+

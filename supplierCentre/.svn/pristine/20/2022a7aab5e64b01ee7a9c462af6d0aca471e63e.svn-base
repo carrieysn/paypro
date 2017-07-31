@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="common.jsp" %>
+<body>
+	<div class="headers">
+		<a href="${ctx}/" class="logo">商家中心</a>
+		<ul class="nav">
+			<li class="sel"><a href="${ctx}/">首页</a></li>
+			<li><a href="${ctx}/zxindex">资讯</a></li>
+			<li><a href="${ctx}/zsindex">招商</a></li>
+			<li><a href="#">供应商登录</a></li>
+		</ul>
+	</div>
+	
+<script type="text/javascript">
+$(function(){
+	var lay = ${laytab};
+	if(""!= lay && null != lay){
+		if(lay == 1){
+			$('.nav li').removeClass('sel');
+			$('.nav li').eq(1).addClass('sel');
+		}
+	}
+	/* $('.nav li').click(function(event) {
+		$('.nav li').removeClass('sel');
+		$(this).removeClass('sel').addClass('sel');
+	});*/
+});
+</script>

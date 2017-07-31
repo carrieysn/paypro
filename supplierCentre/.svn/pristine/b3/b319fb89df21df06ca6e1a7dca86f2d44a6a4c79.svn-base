@@ -1,0 +1,13 @@
+package com.meitianhui.supplierCentre.dao;
+
+import com.meitianhui.supplierCentre.entity.AuditLogger;
+
+public interface LoggerMapper {
+	/***
+	 * 招商管理添加日志
+	 * @param auditFlow
+	 * @return
+	 */
+	public void addAuditLogger(AuditLogger log);
+	
+}

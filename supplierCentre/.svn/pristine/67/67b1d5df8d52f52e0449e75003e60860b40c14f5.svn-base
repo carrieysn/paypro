@@ -1,0 +1,164 @@
+package com.meitianhui.supplierCentre.util;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.meitianhui.partner.entity.SessionUser;
+import com.meitianhui.platform.cache.jedis.RedisUtils;
+import com.meitianhui.platform.utils.IDUtil;
+
+public class ActionHelper {
+	
+
+	/***
+	 * 供应商的token前缀
+	 */
+	private final static String TOKEN_PREFIX = "partner_token_";
+	
+	/***
+	 * token客户端cookie标识
+	 */
+	private final static String TOKEN_COOKIE_NAME = "PUSERTOKEN";
+	
+	
+	/** session过期时长 30分钟**/
+	private final static int SESSION_EXPIRED_TIME = 120 * 60;
+	
+	/***
+	 * 设置SessionUser
+	 * @param request
+	 * @author 丁硕
+	 * @date   2017年4月13日
+	 */
+	public static void setSessionUser(HttpServletResponse  response, SessionUser user){
+		final String token = IDUtil.getUUID().toUpperCase();
+		RedisUtils.put(TOKEN_PREFIX + token, user, SESSION_EXPIRED_TIME);
+		Cookie cookie = new Cookie(TOKEN_COOKIE_NAME, token);
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+	}
+	
+	
+	/***
+	 * 获取sessionUser信息
+	 * @param request
+	 * @return
+	 * @author 丁硕
+	 * @date   2017年4月13日
+	 */
+	public static SessionUser getSessionUser(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null && cookies.length > 0){
+			for(Cookie cookie : cookies){
+				if(TOKEN_COOKIE_NAME.equals(cookie.getName())){
+					String key = TOKEN_PREFIX + cookie.getValue();
+					SessionUser user = (SessionUser) RedisUtils.get(key);
+					if(user != null){
+						RedisUtils.expire(key, SESSION_EXPIRED_TIME);
+					}
+					return user;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/***
+	 * 删除SessionUser信息
+	 * @param response
+	 * @author 丁硕
+	 * @date   2017年4月13日
+	 */
+	public static void removeSessionUser(HttpServletRequest request, HttpServletResponse response){
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null && cookies.length > 0){
+			for(Cookie cookie : cookies){
+				if(TOKEN_COOKIE_NAME.equals(cookie.getName())){
+					String key = TOKEN_PREFIX + cookie.getValue();
+					RedisUtils.remove(key);
+					cookie.setMaxAge(0);
+					cookie.setValue(null);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+					break;
+				}
+			}
+		}
+	}
+	
+	/***
+	 * 获取请求的地址的IP地址
+	 * @param request
+	 * @return
+	 */
+	public static String getIpAddr(HttpServletRequest request) {
+		//首先获取Nginx设置的IP头信息
+		String ipAddress = request.getHeader("X-Real-IP");
+		if(ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)){
+			request.getHeader("x-forwarded-for");
+		}
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader("Proxy-Client-IP");
+		}
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getRemoteAddr();
+			if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+				// 根据网卡取本机配置的IP
+				InetAddress inet = null;
+				try {
+					inet = InetAddress.getLocalHost();
+					ipAddress = inet.getHostAddress();
+				} catch (UnknownHostException e) {
+				}
+			}
+		}
+		// 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+		if (ipAddress != null && ipAddress.length() > 15) {
+			if (ipAddress.indexOf(",") > 0) {
+				ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+			}
+		}
+		return ipAddress;
+	}
+	
+	/***
+	 * 获取请求全路径
+	 * @param request
+	 * @return
+	 * @author 丁硕
+	 * @date   2015年12月18日
+	 */
+	public static String getFullRequestUrl(HttpServletRequest request) {
+		StringBuffer url = new StringBuffer();
+		url.append(request.getRequestURL());
+		if (request.getQueryString() != null) {
+			url.append("?").append(request.getQueryString());
+		}
+		return url.toString();
+	}
+	
+	/***
+	 * 获取当前相对于工程的全路径
+	 * @param request
+	 * @return
+	 * @author 丁硕
+	 * @date   2015年12月21日
+	 */
+	public static String getCurrentUrl(HttpServletRequest request){
+		StringBuffer url = new StringBuffer();
+		url.append(request.getRequestURI());
+		if (request.getQueryString() != null) {
+			url.append("?").append(request.getQueryString());
+		}
+		return url.toString();
+	}
+
+}

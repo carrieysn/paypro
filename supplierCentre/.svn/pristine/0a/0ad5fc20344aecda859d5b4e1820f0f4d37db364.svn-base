@@ -1,0 +1,80 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/common/layout/common.jsp" %>
+<body>
+	<div class="headers">
+		<a href="${ctx}/" class="logo">查看状态</a>
+		<ul class="nav">
+			
+			<li><a href="javascript:void(0);">您好！${sessionUser.contact_tel}</a>&nbsp;&nbsp;<a href="${ctx}/logout" class="icon-abort">退出</a>  ·  <a href="${ctx}/">首页</a></li>
+		</ul>
+	</div>
+	<div class="process-wrap">
+		<div class="step-wrap">
+			<div class="step">
+				<ul class="address">
+					<li>公司名称：${sessionUser.supplier_name}</li>
+					<li>注册地址：${sessionUser.detailAddress}</li>
+					<li>联系人：   ${sessionUser.contact_person}</li>
+					<li>手机号：${sessionUser.contact_tel}</li>
+				</ul>
+			</div>
+		</div>
+		<ul class="goods-list page-list-table" id="presupplier_list_ul" template="presupplierListTpl" url="${ctx}/presupplier/pageList?contact_tel=${sessionUser.contact_tel}" isNullMsg="false" pageSize="10" visiblePages="3"  ></ul>
+		<script id="presupplierListTpl" type="text/html">
+			{{each list as preSupplier i}}
+               <li>
+                        <a  href="${ctx}/presupplier/detail?supplier_id={{preSupplier.supplier_id}}">
+						<div class="fl god-img"><img src="{{preSupplier.pic_info | imgFormat}}" width="178px" height="178px"></div>
+						<div class="fl god-info">
+                        
+                         {{if preSupplier.audit_status == 'sample'}}<p class="ti icon-djy"><span> {{preSupplier.title}}</span><i class="ti-tag"></i></p>
+                         {{else if preSupplier.audit_status == 'review'}}<p class="ti icon-dfs"><span> {{preSupplier.title}}</span><i class="ti-tag"></i></p> 
+                         {{else if preSupplier.audit_status == 'fail'}}<p class="ti icon-ybh"><span> {{preSupplier.title}}</span><i class="ti-tag"></i></p>
+                         {{else if preSupplier.audit_status == 'pass'}}<p class="ti icon-ytg"><span> {{preSupplier.title}}</span><i class="ti-tag"></i></p>
+                         {{else if preSupplier.audit_status == 'assign'}}<p class="ti icon-dfp"><span> {{preSupplier.title}}</span><i class="ti-tag"></i></p>
+                         {{else if preSupplier.audit_status == 'trial'}}<p class="ti icon-dcs"><span> {{preSupplier.title}}</span><i class="ti-tag"></i></p>
+						 {{/if}}
+                        <p class="nr">{{preSupplier.desc1}}</p>
+                        <p class="tag">{{preSupplier.label | labelFormat}}</p>
+                        <p class="time">{{preSupplier.created_date}}</p >
+                        </div>
+						</a>
+                </li>
+			{{/each}}
+		</script>
+	</div>
+		<script type="text/javascript">
+		$(function(){
+			template.config("escape", false);
+			template.helper('labelFormat', function (label) {
+				if(label){
+					var label = label.split(/[,， ]/);
+					//var label = label.split(",");
+					var labelHtml = "";
+					$.each(label, function(index, value){
+						if(label[index]){
+						   labelHtml += '<span>'+label[index] + '</span>';
+						}
+					});
+					return labelHtml;
+				}
+			});
+			
+			//格式化图片信息
+			template.helper('imgFormat', function (pic_info) {
+				if(pic_info){
+					var pic_info = $.parseJSON(pic_info);
+					if($.isArray(pic_info) && pic_info[0]){
+						return '${ctx}/file/preview.do?doc_id=' + pic_info[0].path_id;
+					}
+				}
+				return '';
+			});
+			
+			
+		});
+		
+		</script>
+<%-- 	<script type="text/javascript" src="${ctx}/common/static/goods/js/list.js"></script> --%>
+<%@ include file="/common/layout/footer.jsp"%>
+    

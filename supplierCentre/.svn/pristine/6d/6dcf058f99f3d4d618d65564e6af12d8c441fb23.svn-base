@@ -1,0 +1,83 @@
+package com.meitianhui.supplierCentre.controller.portal;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.meitianhui.platform.cache.UserCache;
+import com.meitianhui.platform.constant.CommonRspCode;
+import com.meitianhui.platform.controller.ApiBaseController;
+import com.meitianhui.platform.entity.User;
+import com.meitianhui.platform.exception.BusinessException;
+import com.meitianhui.platform.exception.SystemException;
+import com.meitianhui.platform.utils.ValidateUtil;
+import com.meitianhui.supplierCentre.controller.PreSupplierController;
+import com.meitianhui.supplierCentre.entity.PreSupplier;
+import com.meitianhui.supplierCentre.service.PreSupplierService;
+
+/**
+ * 商家推荐商品信息
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("portal/presupplier")
+public class PreSupplierPortalController extends ApiBaseController{
+	
+	private Logger logger = Logger.getLogger(PreSupplierController.class);
+	
+	
+	@Autowired
+	private PreSupplierService preSupplierService;
+	
+
+	@Override
+	public Object operate(HttpServletRequest request, String service, Map<String, String> paramsMap)
+			throws BusinessException, SystemException {
+		try{
+			if ("presupplier.addPreSupplier".equals(service)) {//添加推荐商品
+				return this.saveGoods(paramsMap);
+			}else {
+				throw new BusinessException(CommonRspCode.SERVICE_ERROR, CommonRspCode.MSG.get(CommonRspCode.SERVICE_ERROR));
+			}
+		} catch (BusinessException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new SystemException(e);
+		}
+	}
+	
+	public String saveGoods(Map<String, String> paramsMap) throws BusinessException,SystemException{
+		logger.info("添加推荐商品接口调用");
+		PreSupplier preSupplier = new PreSupplier();
+
+		ValidateUtil.validateParams(paramsMap, new String[]{"supplier_name","area_id","address","contact_person","contact_tel","title","pic_info","category","market_price","settled_price","stock_qty","min_buy_qty","max_buy_qty"});
+		String token = paramsMap.get("token");
+		User user = UserCache.getUser(token);
+		if(user == null){
+			throw new BusinessException(CommonRspCode.MSG.get(CommonRspCode.TOKEN_INVALID), CommonRspCode.TOKEN_INVALID);
+		}
+		try {
+			BeanUtils.populate(preSupplier, paramsMap);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			throw new BusinessException();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			throw new BusinessException();
+		}
+		preSupplierService.saveOrUpdateGoods(preSupplier);
+		logger.info("调用接口新增推荐商品成功！");
+		return preSupplier.getSupplier_id();
+	}
+	
+
+	
+}

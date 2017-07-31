@@ -1,0 +1,452 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<form id="preSupplierEdit_form">
+<ul class="god-detail">
+            <input type="hidden" name="supplier_id" id="supplier_id" value="${preSupplier.supplier_id}">
+			<li>
+				<div class="ti">${preSupplier.title}</div>
+				<table>
+					<tr>
+						<td width="80">描述：</td>
+						<td><input type="text" class="inputk30" value="${preSupplier.desc1}" name="desc1" datatype="*20-120" nullmsg="请输入商品描述！" errormsg="商品描述20-120个字！"/></td>
+					</tr>
+					<tr>
+						<td width="80">标签：</td>
+						<td>
+						    <input type="text" class="inputk30" value="${preSupplier.label}" name="label" datatype="*1-200" errormsg="标签1~200个字符之间！" ignore="ignore" onkeydown="value=value.replace(/[!@#$%^&*]/,'') "/>
+						</td>
+					</tr>
+					<tr>
+						<td width="80">类目：</td>
+						<td><select class="inputk30" name="category" datatype="*" nullmsg="请选择类目！" >
+					            <c:forEach items="${appEnumList}" var="appEnum" varStatus="enumStatus">
+									<c:forEach items="${appEnum.app_display_area_list}" var="displayArea" varStatus="status">
+										<option value="${displayArea.display_area}" <c:if test="${displayArea.display_area eq preSupplier.category}">selected</c:if>>${displayArea.display_area}</option>
+									</c:forEach>
+								</c:forEach>
+							</select></td>
+					</tr>
+					<tr>
+						<td width="80">规格：</td>
+						<td><input type="text" class="inputk30" value="${preSupplier.specification}" name="specification" datatype="*1-20" nullmsg="请输入规格！" errormsg="商品规格1~20个字符之间！"/></td>
+					</tr>
+					<tr>
+						<td width="80">库存：</td>
+						<td><input type="text" class="inputk30" value="${preSupplier.stock_qty}" name="stock_qty" datatype="stocknum" nullmsg="请输入库存量！" errormsg="请输入正确库存,库存最小值为100！"  maxlength="9" /></td>
+					</tr>
+					<tr>
+						<td width="80" valign="top">商品图片：</td>
+						<td>
+						    <input type="hidden" name="pic_info" id="pic_info">
+							<div style="overflow: hidden;margin-bottom: 15px;">
+								<button class="add-imgbtn" style="height: 35px; width: 80px; background:#0db200;border:none;float:left;margin-right:9px;border-radius:3px;color:#ffffff;font-size:12px;">上传图片</button>
+								<p style="color:#FF5842;font-size:12px;width:440px;">推荐图片尺寸：800X800，只能上传200kb以内jpg,png格式的图片，最多上传5张图片</p>
+						 	</div>
+						 	<div class="god-img-list" id="editimglist">
+								<c:if test="${picInfoList.size() > 0}">
+								    <c:forEach items="${picInfoList}" var="picInfo">
+								   		 <a class="cg-imgdetail" id="img-pro${picInfo.path_id}"><img src="${ctx}/file/preview.do?doc_id=${picInfo.path_id}"  doc_id="${picInfo.path_id}" width="128px" height="128px"><em onclick="delimg('${picInfo.path_id}')"></em></a>
+									</c:forEach>
+							    </c:if>
+				            </div>
+						 </td>
+					</tr>
+				    <tr>
+						<td width="80" valign="top">商品详情：</td>
+						<td width="800">
+						    <input type="hidden" name="pic_detail_info" id="pic_detail_info">
+							<div style="overflow: hidden;margin-bottom: 15px;">
+								<button class="add-imgbtn" style="height: 35px; width: 80px; background:#0db200;border:none;float:left;margin-right:9px;border-radius:3px;color:#ffffff;font-size:12px;">上传图片</button>
+								<p style="color:#FF5842;font-size:12px;width:440px;">推荐图片尺寸：800X800，长度不限，只能上传200kb以内jpg,png格式的图片，最多上传10张图片</p>
+						 	</div>
+						 	 <div class="god-img-list" id="editimgdetaillist">
+								<c:if test="${picDetailInfoList.size() > 0}">
+								    <c:forEach items="${picDetailInfoList}" var="picDetailInfo">
+								       <a class="cg-imgdetail" id="img-pro${picDetailInfo.path_id}"><img src="${ctx}/file/preview.do?doc_id=${picDetailInfo.path_id}" doc_id="${picDetailInfo.path_id}" width="128px" height="128px"><em onclick="delimg('${picDetailInfo.path_id}')"></em></a>
+									</c:forEach>
+							    </c:if>
+			              	</div>
+						 </td>
+					</tr>
+					
+					
+				</table>
+				<div class="god-url" style="margin-top:104px;">
+					商品链接：<input type="text" class="inputk30" value="${preSupplier.pic_url}" id="prelink" name="pic_url" datatype="validateLink" nullmsg="请输入商品链接！" errormsg="商品链接1~255个字符之间！" maxlength="255"><a class="btn-url" href="javascript:void(0);" onclick="copyToClipBoard()">复制链接</a>
+				</div>
+			</li>
+		</ul>
+		<div class="god-title">合作方案</div>
+		<ul class="god-detail">
+			<li>
+				<table>
+					<tr>
+						<td width="60">市场价：</td>
+						<td>￥<input type="text" class="inputk30" value="${preSupplier.market_price}" name="market_price" class="k430" datatype="comparePrice" nullmsg="请输入市场价！" onkeydown="validateNum(this)"></td>
+					</tr>
+					<tr>
+						<td width="60">优惠价：</td>
+						<td>￥<input type="text" class="inputk30" value="${preSupplier.discount_price}" name="discount_price" class="k430" datatype="comparePrice" nullmsg="请输入优惠价！" onkeydown="validateNum(this)" ></td>
+					</tr>
+					<tr>
+						<td  width="60">结算价：</td>
+						<td>￥<input type="text" class="inputk30" value="${preSupplier.settled_price}" name="settled_price" class="k430" datatype="comparePrice"  onkeydown="validateNum(this)" ignore="ignore"></td>
+					</tr>
+					<tr>
+						<td  width="60">服务费：</td>
+						<td>￥<input type="text" class="inputk30" value="${preSupplier.service_fee}" name="service_fee" class="k430" datatype="comparePrice"  onkeydown="validateNum(this)" ignore="ignore"></td>
+					</tr>
+					<tr>
+						<td  width="60">起   订：</td>
+						<td><input type="text" class="inputk30" value="${preSupplier.min_buy_qty}"  name="min_buy_qty" class="k430" datatype="minNum" nullmsg="请输入起订数量！" errormsg="起订量在1~9999999999 之间!"></td>
+					</tr>
+					<tr>
+						<td  width="60">限   购：</td>
+						<td><input type="text" class="inputk30" value="${preSupplier.max_buy_qty > 0 ? preSupplier.max_buy_qty : ''}" name="max_buy_qty"  class="k430" datatype="minNum" errormsg="限购量在1~9999999999 之间!" ignore="ignore"></td>
+					</tr>
+					<%-- <tr>
+						<td>配送范围：</td>
+						<td>${empty preSupplier.delivery_area ? '全国' : preSupplier.delivery_area}</td>
+					</tr>
+					<tr>
+						<td  width="80">上架时间：</td>
+						<td><input type="text" class="inputk30"  value="${preSupplier.valid_thru}" name="valid_thru"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d',readOnly:true})"/></td>
+					</tr> --%>
+					<tr>
+						<td  width="60" valign="top">备   注：</td>
+						<td><textarea value="${preSupplier.remark}" name="remark" class="k430" style="width:430px;height:100px;border:1px solid #dddddd;" datatype="*1-500" nullmsg="请输入备注！" errormsg="备注不超过500个字！" ignore="ignore"></textarea></td>
+					</tr>
+				</table>
+				
+			</li>
+		</ul>
+		<div class="god-title">推荐商家</div>
+		<ul class="god-detail">
+			<li>
+				<table>
+					<tr>
+						<td width="80">店铺名称：</td>
+						<td class="3"><input type="text" class="inputk30" value="${preSupplier.supplier_name}" class="k430" name="supplier_name"  nullmsg="请输入店铺名称！" dataType="*1-25" errormsg="店铺名称不超过25个字！" maxlength="50"></td>
+					</tr>
+					<tr>
+						<td width="80">注册地址：</td>
+						<%-- <input type="hidden"  name="area_id" id="area_id" value="${preSupplier.area_id}"/> --%>
+						<td colspan="3" class="areaContainer">
+						     <select class="bind-province k130"></select>
+	                         <select class="bind-city k130"></select>
+	                         <select class="bind-district k130" name="area_id"></select>
+	                         <input type="hidden" class="_path_" value="${empty preSupplier.areaPath ? _path_ : preSupplier.areaPath}">
+                        </td>
+					</tr>
+					<tr>
+					   <td>详细地址：</td>
+					   <td class="3"><input type="text" class="inputk30" value="${preSupplier.address}"  name="address"  class="k430" datatype="*1-500" nullmsg="请输入详细地址！" errormsg="详细地址1-500个字！" maxlength="500"></td>
+					</tr>
+					<tr>
+						<td width="80">联系人：</td>
+						<td><input type="text" class="inputk30" value="${preSupplier.contact_person}" name="contact_person"  class="k430" datatype="*1-30" nullmsg="请输入联系人！" errormsg="联系人不超过30个字！" maxlength="30"></td>
+						<td width="60" style="padding-left:10px;">电话：</td>
+						<td><input type="text" class="inputk30" name="contact_tel" value="${preSupplier.contact_tel}" class="k430" datatype="m"  nullmsg="请输入手机号！" errormsg="请输入正确手机号！"></td>
+					</tr>
+					<tr>
+						<td width="80">介绍人：</td>
+						<td><input type="text" class="inputk30" placeholder="输入介绍人" name="introducer"  value="${preSupplier.introducer}" class="k430" datatype="*1-30"  errormsg="介绍人不超过30个字！" ignore="ignore" >
+						<input type="hidden" name="introducerTel" value="${preSupplier.introducerTel}"/>
+						</td>
+						<%-- <td width="80">电话：</td>
+						<td>${preSupplier.introducerTel}</td> --%>
+					</tr>					
+				</table>				
+			</li>
+		</ul>
+		<div class="god-title">寄样信息</div>
+		<ul class="god-detail">
+			<li>
+				<table>
+				        <input type="hidden" name="supplier_id" value="${preSupplier.supplier_id}" id="supplier_id"/>
+						<tr>
+							<td>物流公司：</td>
+							<td><input type="text" class="inputk30"  value="${preSupplier.logisticCompany}" name="logisticCompany" id="company" datatype="*1-30"  nullmsg="请输入物流公司！" errormsg="物流公司不超过30个字！" ignore="ignore"/></td>
+						</tr>
+						<tr>
+							<td>物流单号：</td>
+							<td><input type="text" class="inputk30" value="${preSupplier.logisticCode}" name="logisticCode" id="bh" datatype="*1-50" nullmsg="请输入物流单号！" errormsg="物流单号不超过50个字符！" ignore="ignore"/></td>
+						</tr>
+				</table>				
+			</li>
+		</ul>
+	        <div class="btn-wrap">
+		 		<a class="btn-confirm" href="javascript:void(0);" id="editPreBut">提交</a>
+		 		<a class="gobtn-list" href="${ctx}/presupplier/list">返回商品列表</a>
+		 	</div>
+</form>
+<script type="text/javascript">
+$(function(){
+	
+	 //初始化地区选择
+	M.area(".areaContainer");
+	//初始化图片显示
+	//initPicInfo();
+	//初始化上传控件
+	initUpload();
+
+	/**初始化上传控件**/
+	function initUpload(){
+		$('.add-imgbtn').each(function(){
+			var imgUpload = this;
+			var uploader = new plupload.Uploader({
+				runtimes: 'gears,html5,html4,flash,silverlight',
+				browse_button : imgUpload, 	//触发文件选择对话框的按钮，为那个元素id
+				url : ctx + '/file/upload.do', //服务器端的上传页面地址
+				flash_swf_url : 'js/Moxie.swf', 		//swf文件，当需要使用swf方式进行上传时需要配置该参数
+				silverlight_xap_url : 'js/Moxie.xap', 	//silverlight文件，当需要使用silverlight方式进行上传时需要配置该参数
+				file_data_name: 'up_load_file',
+				unique_names: false,
+				filters : {
+					max_file_size: '200kb',
+					mime_types: [
+						{title : "Image files", extensions : "jpg,png"}
+					]
+				},
+				init: {
+					FilesAdded: function(up, files) {
+					 var loadLen = files.length;
+					 var idname = $(imgUpload).parent().parent().find('.god-img-list').attr('id');
+					 var len = $(imgUpload).parent().parent().find('.god-img-list').find('img').length;
+					 if(idname == 'editimglist'){
+							if(loadLen + len >5){
+								M.alert("上传图片 最多5张!");
+								for(var i=0;i<files.length;i++){
+									up.removeFile(files[i]);
+								}
+								return;
+							}else{
+							up.start();} 
+					 }
+					 if(idname == 'editimgdetaillist'){
+							if(loadLen + len >10){
+								M.alert("上传图片 最多10张!");
+								for(var i=0;i<files.length;i++){
+									up.removeFile(files[i]);
+								}
+								return;
+							}else{
+							up.start();} 
+					 }
+					},
+					UploadProgress: function(up, file) {
+						$('#'+file.id).find('p').text(file.percent + '%');
+					},
+					Error: function(up,err){
+						if(err.code == '-600'){
+							M.alert('图片尺寸不符，请重新选择上传！');
+						}
+					},
+					FileUploaded: function(up, file, responseObject) {
+						var data = JSON.parse(responseObject.response)	// 上传接口返回的数据
+						var doc_id = data.data;
+						var idname = $(imgUpload).parent().parent().find('.god-img-list').attr('id');
+						var len = $(imgUpload).parent().parent().find('.god-img-list').find('img').length;
+						if(idname == 'editimglist'){
+							if(len < 5){
+								$("#editimglist").append('<a class="cg-imgdetail" id="img-pro'+doc_id+'"><img src='+ctx +'/file/preview.do?doc_id='+ doc_id+' doc_id='+doc_id+' width="128px" height="128px"><em onclick="delimg(\''+doc_id+'\')"></em></a>');
+							}
+						}
+						if(idname == 'editimgdetaillist'){
+							if(len < 10){
+								$("#editimgdetaillist").append('<a class="cg-imgdetail" id="img-pro'+doc_id+'"><img src='+ctx +'/file/preview.do?doc_id='+ doc_id+' doc_id='+doc_id+' width="128px" height="128px"><em onclick="delimg(\''+doc_id+'\')"></em></a>');
+							}
+						}
+						
+					}
+				}
+			});
+			uploader.init(); 
+		});
+	}
+	
+	var validateForm = $('#preSupplierEdit_form').Validform({
+		tiptype : 3,
+		datatype:{
+			"validateLink":function(gets,obj,curform,regxp){
+				var flag = true;
+				if(gets.length>255||gets.length<1){
+					obj.attr('errormsg','商品链接1~255个字符之间！');
+					flag = false;
+				}
+				var pic_url = $("#preSupplierEdit_form input[name='pic_url']").val();
+				var supplier_id = $("#supplier_id").val();
+				var getinfo = $.trim(pic_url);
+				 $.ajax({
+				        type: 'POST',
+				        url: ctx + '/presupplier/valRecomm',
+				        data: {'pic_url':getinfo,'supplier_id':supplier_id},
+				        async:false,
+				        success: function(result) {
+				            if (result.status == '1') {   //成功
+				            	 obj.attr('errormsg','此商品链接已存在！');
+								 flag = false;
+				            }
+				        }
+				     });
+				return flag;
+			},
+			"stocknum":function(gets,obj,curform,regxp){
+	        	var str=/^[1-9]{1}\d{2,8}$/;
+				if(str.test(gets)){return true;}
+				return false;
+	        },
+			"comparePrice": function(gets,obj,curform,regxp){
+				if(regxp.money.test(gets)){
+					var market_price_el = $("#preSupplierEdit_form input[name='market_price']");
+					var market_price = market_price_el.val();
+					var discount_price_el =  $("#preSupplierEdit_form input[name='discount_price']")
+					var discount_price = discount_price_el.val();
+					if(market_price && discount_price){
+						if(parseFloat(gets) < 0){
+							return false;
+						}
+						if(parseFloat(market_price) < parseFloat(discount_price)){
+							return false;
+						}else{
+							market_price_el.removeClass("Validform_error");
+							market_price_el.nextAll(".Validform_checktip").removeClass("Validform_wrong");
+							discount_price_el.removeClass("Validform_error");
+							discount_price_el.nextAll(".Validform_checktip").removeClass("Validform_wrong");
+						}
+					}
+					return;
+				}
+				return "请输入正确的金额！";
+			},
+			"minNum": function(gets,obj,curform,regxp){
+				if(regxp.n.test(gets)){
+					if(parseInt(gets) < 1){
+						return false;
+					}
+					var min_buy_qty_el = $("#presupplier_form input[name='min_buy_qty']");
+					var min_buy_qty = min_buy_qty_el.val();
+					var max_buy_qty_el = $("#presupplier_form input[name='max_buy_qty']")
+					var max_buy_qty = max_buy_qty_el.val();
+					if(min_buy_qty){
+						if(parseInt(min_buy_qty) < 1 || parseInt(min_buy_qty) > 9999999999){
+							return false; 
+						}
+					}
+					if(max_buy_qty){
+						if(parseInt(max_buy_qty) < 1 || parseInt(max_buy_qty) > 9999999999){
+							return false; 
+						}
+					}
+					if(min_buy_qty && max_buy_qty){
+						if(parseInt(min_buy_qty) > parseInt(max_buy_qty)){
+							obj.attr('errormsg','起订数量不能大于限购数量！');
+							return false; 
+						}
+					}
+					return true;
+				}
+				return "请填写数字！";
+			}
+			
+		}
+	});
+	
+	
+	$('#editPreBut').on('click',function(){
+		  if(validateForm.check(false)){
+		  //验证成功、将上传的图片数据进行格式化
+			 var picInfoArray = new Array();
+			//产品图片
+			$("#editimglist .cg-imgdetail").each(function(){
+				var img = {};
+				img.path_id = $(this).find('img').attr("doc_id");
+				img.title = $(this).find('.ms').text();
+				if(img.path_id){
+					picInfoArray.push(img);
+				}
+			});
+			if(picInfoArray.length < 1){
+				M.alert('请至少上传一张商品图片');
+				return false;
+			} else{
+				$("#pic_info").val(JSON.stringify(picInfoArray));
+			} 
+			
+			//产品详情
+			var picdetailArray = new Array();
+			$("#editimgdetaillist .cg-imgdetail").each(function(){
+				var img = {};
+				img.path_id = $(this).find('img').attr("doc_id");
+				img.title = "";
+				if(img.path_id){
+					picdetailArray.push(img);
+				}
+			});
+			
+			if(picdetailArray.length < 1){
+				M.alert('请至少上传一张商品详情图片');
+				return false;
+			} else{
+				$("#pic_detail_info").val(JSON.stringify(picdetailArray));
+			} 
+			layer.confirm("是否确认提交？", function(index){
+				layer.close(index);
+				publish();
+			});
+			
+		  }
+   });
+		
+		//修改 商品信息
+		function publish(){
+			formatDeliveryArea();
+			var loadIdContract = layer.load();
+			var data = M.formatElement("#preSupplierEdit_form");
+			M.post(ctx + '/presupplier/edit', data, function(result){
+			 //成功
+			 layer.closeAll();
+			 var supplier_id = result.supplier_id;
+			 M.alert("操作成功！");
+			 window.location.href = '${ctx}/presupplier/detail?supplier_id='+supplier_id;
+			}, function(result){
+				layer.close(loadIdContract);
+				M.alert(result.msg || '提交失败!');
+			});
+			//格式化注册地址 
+			function formatDeliveryArea(){
+				var areaArray = new Array();
+				$(".areaContainer").each(function(){
+					var _this = this;
+					var district = $(this).find(".bind-district").val();
+					var city = $(this).find(".bind-city").val();
+					var province = $(this).find(".bind-province").val();
+					var areaCode = district || city || province;
+					if(areaCode){
+						areaArray.push(areaCode);
+					}
+				});
+				return false;
+			}
+			
+		}
+	
+	
+	
+});
+
+function validateNum(obj){
+	  obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符   
+	  obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的   
+	  obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");  
+	  obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数   
+	  if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额  
+	   obj.value= parseFloat(obj.value);  
+	  }  
+}
+
+function delimg(id){
+	var parent = $('#img-pro'+id);
+	parent.remove();
+}
+
+</script>

@@ -1,0 +1,121 @@
+$(function(){
+			var flag = 0;
+			loadList(flag);
+			$('.current-wrap li').click(function(event) {
+				flag = $(this).index();
+				$('.current-wrap li a').removeClass('sel');
+				$('.current-wrap li a').eq(flag).addClass('sel');
+				loadList(flag);
+			});
+			function loadList(flag){
+				/* $('.current-wrap li').removeClass('sel');
+				$(this).removeClass('sel').addClass('sel'); */
+				//var flag = $(this).index();
+				/* window.location.href = '${ctx}/presupplier/list?f='+index; */
+				
+				M.post(ctx + '/presupplier/searchlist', {"flag":flag}, function(result){
+					  var dataList = result.data;
+					  //console.log(dataList);
+					  var html = '';
+                      if(dataList == null || dataList == ""){
+						  html = '<div>没有查到对应的商品列表！</div>'
+					  }
+					  for(var index in dataList){
+						    var obj = dataList[index];
+						    html += '<li>'
+							+'<div class="god">'
+							+'<div class="fl">';
+							var imghtml = '';
+							   for(var num in obj.picList){
+								   var imgobj = obj.picList[num];
+								   imghtml += '<img src="${ctx}/file/preview.do?doc_id='+imgobj.path_id+'">'
+							   }
+				           html += imghtml
+							+'</div>'
+							+'<div class="fl">'
+								+'<p class="name">'+obj.title+'</p>'
+								+'<p class="xiangqing">'+obj.desc1+'</p>'
+							+'</div>'
+							+'<a style="display: none;" href="查看状态3.html" class="fr icon-bj"></a>'
+						+'</div>';
+						if(flag == '2'){
+							html += '<form id="logisticForm'+obj.supplier_id+'" >'
+							+'<input type="hidden" name="supplier_id" value="'+obj.supplier_id+'"/>';
+						}
+						html+= '<div class="info">'
+						        +'<p>'
+								+'<span>品类：'+obj.category+'</span>'      
+								+'<span>规格：'+obj.specification+'</span>'       
+								+'<span>库存：'+obj.stock_qty+'</span>'       
+								+'<span>厂家：'+obj.manufacturer+'</span>'       
+								+'<span>标签：'+obj.label+'</span>'  
+								+'</p>' 
+								+'<p>';
+								var marketprice = formatNum(obj.market_price);
+								var settledprice = formatNum(obj.settled_price);
+								html += '<span>市场价：'+marketprice+'元</span>'        
+								+'<span>结算价：'+settledprice+'元 </span>'      
+								+'<span>起订：'+obj.min_buy_qty+'件  </span>'     
+								+'<span>限购：'+obj.max_buy_qty+'件 </span>'      
+								+'<span>有效期：'+obj.valid_thru+'</span>'    
+								+'<span>配送范围：'+obj.delivery_area+'</span>' 
+								+'</p></div>';
+								if(flag == '2'){
+									html += '<div class="logistics">'
+									+'<p>'
+									+'<span>物流公司：<input type="text" name="logisticCompany"/></span>'
+									+'<span>物流单号：<input type="text" name="logisticCode"/></span>'
+									+'<span><input value="确定" class="btn-qd" type="button" onclick="submitFun(\''+obj.supplier_id+'\')"  style="border:none;"/></span>'
+									+'</p></div></form>';
+								}
+								html += '</li>';
+					  }
+					  
+					  $(".goods-list").html(html);
+					}, function(result){
+						M.alert(result.msg || '查询失败!');
+					});
+			
+			}
+			
+			
+			function formatNum(flt) {   
+				if(parseFloat(flt) == flt){   
+					return Math.round(flt * 10) / 10;   
+					// 到4位小数, return Math.round(flt * 10000) / 10000;   
+				}else{   
+					return 0;   
+				}
+		    }  
+				  
+			
+		});
+		
+	    function validateLogistic(id){
+	    	var flag = true;
+	    	var company = $("#logisticForm"+id+"" +"input[name='logisticCompany']").val();
+	    	var orderNum = $("#logisticForm"+id+"" +"input[name='logisticCode']").val();
+	    	if($.trim(company) == "" || $.trim(orderNum) == ""){
+	    		flag = false;
+	    	}
+	    	return flag;
+	    	
+	    }
+
+		function submitFun(id){
+			    if(validateLogistic(id)){
+				    var params = M.formatElement('#logisticForm'+id+'');
+				    
+				    
+				    console.log(params);
+	       			M.post('logistic', params, function(result){
+	       				//loadList(3);
+	       				window.location.href = '${ctx}/presupplier/list';
+	       			}, function(result){
+	       				M.alert(result.msg || '提交失败！');
+	       			});
+			    }else{
+			    	M.alert("物流信息不能为空！");
+			    }
+			 
+		}

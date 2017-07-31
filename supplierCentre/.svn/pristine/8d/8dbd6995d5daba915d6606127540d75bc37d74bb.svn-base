@@ -1,0 +1,115 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/common/layout/common.jsp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<body>
+	<div class="headers">
+		<a href="${ctx}/" class="logo"></a>
+		<ul class="nav">
+			<li><a href="${ctx}/logout">首页</a></li>
+			<li><a href="${ctx}/zxindex">资讯</a></li>
+			<li class="sel"><a href="${ctx}/zsindex">商家报名</a></li>
+		</ul>
+	</div>
+	<div class="process-wrap">
+		<div class="step-wrap">
+			<div class="step">
+				<ul class="address">
+					<li>公司名称：<c:if test="${empty sessionUser}">${preSupplier.supplier_name}</c:if>${sessionUser.supplier_name}</li>
+					<li>注册地址：<c:if test="${empty sessionUser}">${preSupplier.detailPath}</c:if>${sessionUser.detailAddress}</li>
+					<li>联系人： <c:if test="${empty sessionUser}">${preSupplier.contact_person}</c:if>${sessionUser.contact_person} </li>
+					<li>手机号：<c:if test="${empty sessionUser}">${preSupplier.contact_tel}</c:if>${sessionUser.contact_tel}</li>
+				</ul>
+			</div>
+		</div>
+		<div class="god-title">商品信息</div>
+		 <c:if test="${preSupplier.audit_status eq 'fail'}">
+		<div class="editcontent-but">
+		    <h4>
+	            <span class="ser-form fr">
+	             <%-- 驳回状态可以进行编辑 --%>
+	                 <a href="javascript: void(0);" id="md-bj" class="edit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辑</a>
+	                 <a href="javascript: void(0);" id="md-qx" class="edit" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</a>
+	            </span>
+			</h4>
+		</div>
+		</c:if>
+		<div class="detailshow" >
+			<%@ include file="preSupplierDetail.jsp" %>
+		</div>
+		<c:if test="${preSupplier.audit_status eq 'fail'}">
+			<div class="editdiv" style="display: none;">
+			    <%@ include file="preSupplierEdit.jsp" %>
+			</div>
+		</c:if>
+		
+	</div>
+	<script type="text/javascript"> 
+	$(function(){
+		//切换显示编辑详情页面
+		$("#md-bj").click(function(){
+			$(this).hide();
+			$(".editdiv").show();
+			$(".detailshow").hide();
+			$("#md-qx").show();
+		});
+		
+		$("#md-qx").click(function(){
+			$(this).hide();
+			$(".detailshow").show();
+			$(".editdiv").hide();
+			$("#md-bj").show();
+		});
+	    $(".list-img .imgshow").on('click', function(){
+			layer.open({
+				  type: 1,
+				  title: false,
+				  closeBtn: 0,
+				  area:  ['500px', '500px'],
+				  skin: 'layui-layer-nobg', //没有背景色
+				  shadeClose: true,
+				  content: $($(this).closest(".imgshowdiv").find(".imgdetailshow"))
+			});
+		});
+		
+		
+	});
+	
+	function copyToClipBoard(){
+	       $('#prelink').trigger('select');
+			  document.execCommand('copy');
+			 M.alert("复制成功");
+		 }
+    function validateLogistic(){
+    	var flag = true;
+    	var company = $('#company').val();
+    	var bh = $('#bh').val();
+    	if($.trim(bh) == ""){
+    		M.alert("物流单号不能为空!");
+    		flag = false;
+    	}
+    	if($.trim(company) == ""){
+    		M.alert("物流公司不能为空!");
+    		flag = false;
+    	}
+    	return flag;
+    	
+    }
+
+	function submitFun(){
+		   var supplier_id = $("#supplier_id").val();
+		   if(validateLogistic()){
+			    var params = M.formatElement('#logisticForm');
+       			M.post('logistic', params, function(result){
+       				M.alert("操作成功！");
+       				window.location.href = '${ctx}/presupplier/detail?supplier_id='+supplier_id;
+       			}, function(result){
+       				M.alert(result.msg || '提交失败！');
+       			});
+		    }
+	}
+    </script>
+	
+<%@ include file="/common/layout/footer.jsp"%>
+<script type="text/javascript" src="${static_resource_server}/common/third-part/plupload/plupload.full.min.js"></script>
+<script type="text/javascript" src="${ctx}/common/static/js/areaSelector.js"></script>

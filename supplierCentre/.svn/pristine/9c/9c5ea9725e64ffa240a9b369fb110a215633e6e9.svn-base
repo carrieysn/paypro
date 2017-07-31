@@ -1,0 +1,187 @@
+/* 默认样式设定 */
+* {
+    margin: 0;
+    padding: 0;
+    color: #666666;
+    font-size: 14px;
+    font-family:  '微软雅黑',Arial, 'Microsoft Yahei', Helvetica, sans-serif;
+}
+h1,h2,h3,h4,h5,h6{
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+}
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+a{ text-decoration: none;}
+a {
+    color: #666666;
+}
+a:hover,a:focus{
+    text-decoration: none;
+}
+input[type="text"],select{font-size:14px; color:#666; border: solid 1px #EEEEEE; height: 30px;}
+option{text-indent: 5px;}
+a, input, select, textarea, a:hover, input:hover, select:hover, textarea:hover,img {
+	outline: none;
+	border: none;
+}
+
+li {
+    list-style: none;
+}
+option {
+	font-size: 14px;
+}
+
+.clear { clear: both; height: 0; width: 100%; }
+.clearfix:after,.layout:after
+{ visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
+.clearfix,.layout
+{ zoom: 1; clear: both; }
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.top50{
+	margin-top: 50px;
+}
+
+.ft40{
+	font-size: 40px;
+}
+.ft18{
+	font-size: 18px;
+}
+.none{
+	display: none;
+}
+body{
+	min-width: 1200px;
+}
+/*分页*/
+.page{
+	margin: 50px 215px 100px;
+    text-align: center;
+    line-height: 26px;
+	margin-bottom: 70px;
+	margin-right: 1px;
+	overflow: hidden;
+}
+.page .calendar{
+	font-size: 14px;
+	margin-top:4px;
+}
+.page .calendar em{
+	color: #F96116;
+	font-style: normal;
+	font-size: 14px;
+	margin:0 4px;
+	font-weight:bold;
+}
+.page a{
+	border: solid 1px #dcdcdc;
+	height: 29px;
+	padding: 0 10px;
+	line-height: 29px;
+	float: left;
+	color: #666666;
+	font-size: 14px;
+	display: inline-block;
+    border-radius: 4px;
+    background-color: #eee;
+    margin: 0 4px;
+}
+.page a.sel,.page a:hover{
+	color: #FFFFFF;
+	background: #333;
+	border: solid 1px #333;
+}
+.page .page_info{
+	border:none;
+	background:none;
+}
+.page select{
+	width: 43px;
+	height: 30px;
+	text-align: center;
+	font-size: 14px;
+	border: solid 1px #dcdcdc;
+	padding: 0 5px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+.page span{ 
+	float: left;
+}
+.page .page-number{
+    width: 2em;
+    text-align: center;
+    height: 30px;
+    border: 1px solid #dcdcdc;
+    padding: 0 5px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+.page .page-go {
+    width: 3em;
+    cursor: pointer;
+    margin: 0;
+    height: 32px;
+    background: #dcdcdc;
+    border-radius: 4px;
+    margin-left: -13px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 0 5px;
+    border: 1px #dcdcdc solid;
+}
+.page span input {
+    float: left;
+}
+
+
+
+
+
+/*==========以下部分是Validform必须的===========*/
+.Validform_checktip{
+	margin-left:8px;
+	line-height:30px;
+	height:30px;
+	overflow:hidden;
+	color:#fff !important;
+	font-size: 12px !important;
+	position: absolute;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+.Validform_right{
+	display: none;
+}
+.Validform_wrong{
+	padding-left: 20px;
+	white-space: nowrap;
+	background: url(../images/validform-la.jpg) no-repeat left #F90;
+}
+.resetpassword .staff .Validform_wrong{
+	background: url(../images/validform-la2.jpg) no-repeat left #F90;
+}
+.Validform_loading{
+	padding-left:20px;
+	background:url(../images/validform-onLoad.gif) no-repeat left center;
+}
+#Validform_msg{color:#7d8289; font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif; width:280px; -webkit-box-shadow:2px 2px 3px #aaa; -moz-box-shadow:2px 2px 3px #aaa; background:#fff; position:absolute; top:0px; right:50px; z-index:99999; display:none;filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#999999');}
+#Validform_msg .iframe{position:absolute; left:0px; top:-1px; z-index:-1;}
+#Validform_msg .Validform_title{line-height:25px; height:25px; text-align:left; font-weight:bold; padding:0 8px; color:#fff; position:relative; background-color:#000;}
+#Validform_msg a.Validform_close:link,#Validform_msg a.Validform_close:visited{line-height:22px; position:absolute; right:8px; top:0px; color:#fff; text-decoration:none;}
+#Validform_msg a.Validform_close:hover{color:#cc0;}
+#Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}
+/*==========Validform样式结束===========*/
+
+
+

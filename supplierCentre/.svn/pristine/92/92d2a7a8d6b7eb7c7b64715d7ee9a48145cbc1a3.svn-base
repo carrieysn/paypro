@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.supplierCentre.dao.AuditFlowMapper">
+	
+	
+	<!-- 保存单条导入记录 -->
+	<insert id="addAuditFlow" parameterType="AuditFlow">
+		INSERT INTO ed_pre_supplier_audit_flow(flow_id,supplier_id,action_by,action_date,is_closed,result,created_date,remark) VALUES
+		(#{flow_id},#{supplier_id},#{action_by},#{action_date},#{is_closed},#{result},SYSDATE(),#{remark})
+	</insert>	
+
+	
+	<select id="getAuditFlow" parameterType="Map" resultType="AuditFlow" >
+	       SELECT * FROM ed_pre_supplier_audit_flow WHERE supplier_id = #{supplier_id}  and result = #{result} and is_current_step = 'Y'
+	</select>
+	
+	<update id="updateAuditFlow" parameterType="String">
+		update ed_pre_supplier_audit_flow set is_current_step = 'N' where supplier_id=#{supplier_id}
+	</update> 
+
+</mapper>

@@ -1,0 +1,199 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<ul class="god-detail">
+			<li>
+				<div class="ti">${preSupplier.title}</div>
+				<table>
+					<tr>
+						<td width="80" valign="top">描述：</td>
+						<td>${preSupplier.desc1}</td>
+					</tr>
+					<tr>
+						<td width="80">标签：</td>
+						<td>
+							<div class="tag">
+							    <c:forEach items="${labels}" var="label">
+						              <span>${label}</span>
+					            </c:forEach>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="80">类目：</td>
+						<td>${preSupplier.category}</td>
+					</tr>
+					<tr>
+						<td width="80">规格：</td>
+						<td>${preSupplier.specification}</td>
+					</tr>
+					<tr>
+						<td width="80">库存：</td>
+						<td>${preSupplier.stock_qty}</td>
+					</tr>
+					<tr>
+						<td width="80">商品图片：</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+						    <div class="list-img">
+								<c:if test="${picInfoList.size() > 0}">
+									<c:forEach items="${picInfoList}" var="picInfo">
+									    <span class="imgshowdiv">
+										    <img src="${ctx}/file/preview.do?doc_id=${picInfo.path_id}" width="118px" height="118px" class="imgshow">
+										    <img src="${ctx}/file/preview.do?doc_id=${picInfo.path_id}"  height="500" width="500" style="display: none;" class="imgdetailshow">
+									    </span>
+									</c:forEach>
+						        </c:if>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="80">商品详情：</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+						    <div class="list-img">
+								<c:if test="${picDetailInfoList.size() > 0}">
+									<c:forEach items="${picDetailInfoList}" var="picDetailInfo">
+									    <span class="imgshowdiv">
+										    <img src="${ctx}/file/preview.do?doc_id=${picDetailInfo.path_id}" width="118px" height="118px" class="imgshow">
+										    <img src="${ctx}/file/preview.do?doc_id=${picDetailInfo.path_id}"  height="500" width="500" style="display: none;" class="imgdetailshow">
+									    </span>
+									</c:forEach>
+						        </c:if>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<div class="god-url">
+					商品链接：<input type="text" value="${preSupplier.pic_url}" id="prelink"><a class="btn-url" href="javascript:void(0);" onclick="copyToClipBoard()">复制链接</a>
+				</div>
+			</li>
+		</ul>
+		<div class="god-title">合作方案</div>
+		<ul class="god-detail">
+			<li>
+				<table>
+					<tr>
+						<td width="80">市场价：</td>
+						<td>￥${preSupplier.market_price}</td>
+					</tr>
+					<tr>
+						<td width="80">优惠价：</td>
+						<td>￥${preSupplier.discount_price}</td>
+					</tr>
+					<tr>
+						<td width="80">结算价：</td>
+						<td>￥${preSupplier.settled_price}</td>
+					</tr>
+					<tr>
+						<td width="80">服务费：</td>
+						<td>￥${preSupplier.service_fee}</td>
+					</tr>
+					<tr>
+						<td width="80">起   订：</td>
+						<td>${preSupplier.min_buy_qty}</td>
+					</tr>
+					<tr>
+						<td width="80">限   购：</td>
+						<td>${preSupplier.max_buy_qty}</td>
+					</tr>
+					<%-- <tr>
+						<td>配送范围：</td>
+						<td>${empty preSupplier.delivery_area ? '全国' : preSupplier.delivery_area}</td>
+					</tr> --%>
+					<c:if test="${preSupplier.audit_status eq 'pass'}">
+						<tr>
+							<td width="80">开卖时间：</td>
+							<td>${preSupplier.valid_thru}</td>
+						</tr>
+					</c:if>
+					<tr>
+						<td valign="top" width="80">备   注：</td>
+						<td>${preSupplier.remark}</td>
+					</tr>
+				</table>
+				
+			</li>
+		</ul>
+		<div class="god-title">推荐商家</div>
+		<ul class="god-detail">
+			<li>
+				<table>
+					<tr>
+						<td width="80">公司名称：</td>
+						<td class="3">${preSupplier.supplier_name}</td>
+					</tr>
+					<tr>
+						<td width="80">注册地址：</td>
+						<td class="3">${preSupplier.path}${preSupplier.address}</td>
+					</tr>
+					<tr>
+						<td width="80">联系人：</td>
+						<td>${preSupplier.contact_person}</td>
+						<td width="60">电话：</td>
+						<td>${preSupplier.contact_tel}</td>
+					</tr>
+					<tr>
+						<td width="80">介绍人：</td>
+						<td>${preSupplier.introducer}</td>
+						<%-- <td width="80">电话：</td>
+						<td>${preSupplier.introducerTel}</td> --%>
+					</tr>					
+				</table>				
+			</li>
+		</ul>
+		<c:if test="${preSupplier.audit_status eq 'sample' || preSupplier.audit_status eq 'review' || preSupplier.audit_status eq 'pass' || preSupplier.audit_status eq 'fail'}">
+			<div class="god-title">寄样信息</div>
+			<ul class="god-detail god-detail">
+				<li>
+					<table>
+					    <c:choose>
+					    <c:when test="${preSupplier.audit_status eq 'sample'}">
+					        <form id="logisticForm">
+					        <input type="hidden" name="supplier_id" value="${preSupplier.supplier_id}" id="supplier_id"/>
+							<tr>
+								<td width="80">物流公司：</td>
+								<td><input type="text" name="company" id="company" class="inputk30" value="${preSupplier.logisticCompany}"/></td>
+							</tr>
+							<tr>
+								<td width="80">物流单号：</td>
+								<td><input type="text" name="bh" id="bh"  class="inputk30" value="${preSupplier.logisticCode}"/></td>
+							</tr>
+							</form>
+						</c:when>
+						<c:otherwise>
+						      <tr>
+								<td width="80">物流公司：</td>
+								<td>${preSupplier.logisticCompany}</td>
+							</tr>
+							<tr>
+								<td width="80">物流单号：</td>
+								<td>${preSupplier.logisticCode}</td>
+							</tr>
+						</c:otherwise>
+						</c:choose>			
+					</table>				
+				</li>
+			</ul>
+		</c:if>
+		<c:if test="${preSupplier.audit_status eq 'fail'}" >
+		    <div class="god-title">驳回原因</div>
+		    <ul class="god-detail">
+		      <li><table><tr><td>${preSupplier.resultdesc}</td></tr></table></li>
+		    </ul>
+		</c:if>
+		<c:choose>
+		 <c:when test="${preSupplier.audit_status eq 'sample'}">
+		    <div class="btn-wrap">
+		 		<a class="btn-confirm" href="javascript:void(0);" onclick="submitFun()">确认</a>
+		 		<a class="gobtn-list" href="${ctx}/presupplier/list">返回商品列表</a>
+		 	</div>
+		 </c:when>
+		 <c:otherwise>
+		 	<div class="btn-wrap">
+		 		<a class="gobtn-list" href="${ctx}/presupplier/list">返回商品列表</a>
+		 	</div>
+		 </c:otherwise>
+		</c:choose>

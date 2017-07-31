@@ -1,0 +1,26 @@
+package com.meitianhui.supplierCentre.util;
+
+import com.meitianhui.supplierCentre.constant.PreGoodConstant;
+
+public class DataUtil {
+	
+	public static String getStatus(String keys){
+		
+		String search_status = "";
+		    if(keys.equals(PreGoodConstant.key0)){
+		    	search_status = PreGoodConstant.status_assign;
+		    }else if(keys.equals(PreGoodConstant.key1)){
+		    	search_status = PreGoodConstant.status_trial;
+		    }else if(keys.equals(PreGoodConstant.key2)){
+		    	search_status = PreGoodConstant.status_sample;
+		    }else if(keys.equals(PreGoodConstant.key3)){
+		    	search_status = PreGoodConstant.status_review;
+		    }else if(keys.equals(PreGoodConstant.key4)){
+		    	search_status = PreGoodConstant.status_pass;
+		    }else if(keys.equals(PreGoodConstant.key5)){
+		    	search_status = PreGoodConstant.status_fail;
+		    }
+		  return search_status;
+	}
+
+}

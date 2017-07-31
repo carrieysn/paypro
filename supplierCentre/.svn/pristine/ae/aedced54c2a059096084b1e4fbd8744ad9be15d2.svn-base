@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/common/layout/header.jsp"%>
+<%-- <%@ include file="/common/layout/common.jsp" %>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>每天惠商家中心-资讯</title>    
+    <link type="text/css" href="${ctx}/common/static/css/base.css" rel="stylesheet" />
+    <link type="text/css" href="${ctx}/common/static/css/index.css" rel="stylesheet" />
+</head>
+
+<body>
+	<div class="headers">
+		<a href="#" class="logo">商家中心</a>
+		<ul class="nav">
+			<li><a href="${ctx}/">首页</a></li>
+			<li  class="sel"><a href="${ctx}/zxindex">资讯</a></li>
+			<li><a href="${ctx}/zsindex">招商</a></li>
+			<li><a href="#">供应商登录</a></li>
+		</ul>
+	</div> --%>
+	<div class="banner-wrap"><img src="${ctx}/common/static/images/banner2.jpg"></div>
+	<div class="content">
+		
+		<ul class="information-list top50">
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx1.jpg"></a>
+				<div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx2.jpg"></a>
+				<div class="ti">赢在2016年度大会精彩瞬间</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx3.jpg"></a>
+				<div class="ti">赢在2016之惠言慧语</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx1.jpg"></a>
+				<div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx2.jpg"></a>
+				<div class="ti">赢在2016年度大会精彩瞬间</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+			</li>
+			<li>
+				<a href="${ctx}/zxdetail"><img src="${ctx}/common/static/images/zx3.jpg"></a>
+				<div class="ti">赢在2016之惠言慧语</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+		</ul>
+		<div class="page">
+			<a class="sel">1</a>
+			<a>2</a>
+			<a>3</a>
+		</div>
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+

@@ -1,0 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/main/css/freeGet.css?v=0.17" />
+	<script type="text/JavaScript" src="${ctx}/static/My97DatePicker/WdatePicker.js"></script>
+	<link href="${ctx}/static/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+	<%
+		request.setAttribute("current_menu_id", "36b2f48f-306b-11e6-93ae-fcaa1490ccaf");
+	%>

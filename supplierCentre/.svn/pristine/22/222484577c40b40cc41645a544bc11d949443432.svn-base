@@ -1,0 +1,14 @@
+package com.meitianhui.supplierCentre.dao;
+
+import java.util.Map;
+
+import com.meitianhui.supplierCentre.entity.AuditFlow;
+
+public interface AuditFlowMapper {
+	
+	public void addAuditFlow(AuditFlow auditFlow);
+	
+	public AuditFlow getAuditFlow(Map<String, Object> params);
+	
+	public void updateAuditFlow(String supplier_id);
+}

@@ -1,0 +1,165 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+ <%
+       request.setAttribute("laytab", "index");
+ %>
+<%@ include file="/common/layout/header.jsp"%>
+    <div class="login-min">
+     <div class="login-min-box">
+        <div class="login-wrap">
+            <div class="ti">供应商登录</div>
+            <form id="loginForm">
+	            <div class="login-bor-wrap">
+	                <div class="login-bor">
+	                    <table>
+	                        <tr>
+	                            <td><label class="wth278 icon-phone"><input name="mobile" type="text" placeholder="手机号"></label></td>
+	                        </tr>
+	                        <tr>
+	                            <td><label class="wth162 icon-yzm"><input  name="imageCode" type="text" placeholder="图形验证码"></label><img src="account/getImageValidCode" class="fr" height="42px" width="110px"></td>
+	                        </tr>
+	                        <tr>
+	                            <td><label class="wth162 icon-sjh"><input name="validCode" type="text" placeholder="手机验证码"></label><a href="javascript:void(0);" class="hq-yzm" cursor="pointer">获取验证码</a></td>
+	                        </tr>
+	                    </table>
+	                    <label class="icon-jz"><input type="checkbox">两周内免登录</label>
+	                    <a href="javascript:void(0);" ><input value="登录" class="btn-login" type="submit" cursor="pointer" style="border:none;"></a>
+	                </div>
+	            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    <div class="swiper-container banner" id="log-banner">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="${ctx}/common/static/images/banner.jpg"></div>
+            <div class="swiper-slide"><img src="${ctx}/common/static/images/banner02.jpg"></div>
+            <div class="swiper-slide"><img src="${ctx}/common/static/images/banner03.jpg"></div>
+        </div>
+
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+    <div class="merchants-wrap">
+        <div class="title">招商</div>
+        <div class="merchants-slider">
+            <div>
+                <h3>
+    			  	<img src="${ctx}/common/static/images/zs3.jpg">
+    			  	<p class="btn-list-zs">
+    					<a href="${ctx}/presupplier/recommend" class="tj">推荐商品</a>
+    					<a href="${ctx}/login">查看状态</a>
+    				</p>
+    	  		</h3>
+    	  	</div>
+            <a href="${ctx}/zsindex" class="btn-more">查看更多招商信息</a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="title">资讯</div>
+        <ul class="information-list">
+            <li>
+                <a href="资讯详情.html"><img src="${ctx}/common/static/images/zx1.jpg"></a>
+                <div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+                <div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+            </li>
+            <li>
+                <a href="资讯详情.html"><img src="${ctx}/common/static/images/zx2.jpg"></a>
+                <div class="ti">赢在2016年度大会精彩瞬间</div>
+                <div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+            </li>
+            <li>
+                <a href="资讯详情.html"><img src="${ctx}/common/static/images/zx3.jpg"></a>
+                <div class="ti">赢在2016之惠言慧语</div>
+                <div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+            </li>
+        </ul>
+        <a href="${ctx}/zxindex" class="btn-more tp0">查看更多资讯</a>
+    </div>
+<%@ include file="/common/layout/footer.jsp"%>
+<script>
+$(function() {
+    //banner
+    $('#log-banner').swiper({
+        pagination: '#log-banner .swiper-pagination',
+        paginationClickable: true,
+        autoplay: 2500,
+        autoplayDisableOnInteraction: false,
+
+    });
+    
+	$('#loginForm').on('submit', function(){
+		var params = M.formatElement('#loginForm');
+		if(params.mobile && (/^1[3|4|5|7|8][0-9]{9}$/.test(params.mobile))){
+			$('#loginForm input[name="mobile"]').removeClass('invalid');
+			if(params.validCode){
+				$('#loginForm input[name="validCode"]').removeClass('invalid');
+				//验证登录
+    			M.post('account/accountLogin', params, function(result){
+    				window.location.href = '${param.return_url}' || '/partner';
+    			}, function(result){
+    				M.alert(result.msg || '登录失败！');
+    			});
+			} else{
+				$('#loginForm input[name="validCode"]').addClass('invalid');
+			}
+		} else{
+			$('#loginForm input[name="mobile"]').addClass('invalid');
+		}
+		return false;
+	});
+	
+	//获取验证码
+	bindGetValidCode();
+	function bindGetValidCode(){
+		$('#loginForm .hq-yzm').on('click', function(){
+			getValidCode();
+			time = 60;
+		});
+	}
+	function getValidCode(){
+		var mobile = $('#loginForm input[name="mobile"]').val();
+		var imageCode = $('#loginForm input[name="imageCode"]').val();
+		if(mobile && (/^1[3|4|5|7|8][0-9]{9}$/.test(mobile))){
+			$('#loginForm input[name="mobile"]').removeClass('invalid');
+			if(imageCode){
+				$('#loginForm input[name="imageCode"]').removeClass('invalid');
+				M.post('account/getValidCode',{'mobile': mobile, 'imageCode': imageCode}, function(result){
+					//获取成功
+    				$('#loginForm .hq-yzm').addClass('icon-invalid').off('click').html('60秒后获取');
+    				interval = window.setInterval(function(){
+    		    		time--;
+    		    		if(time < 1){
+    		    			window.clearInterval(interval);
+    		    			$('#loginForm .hq-yzm').removeClass('icon-invalid').text('获取验证码');
+    		    			bindGetValidCode();
+    		    		} else{
+	    		    		$('#loginForm .hq-yzm').text(time + '秒后获取');
+    		    		}
+    		    	 }, 1000);
+    				//更改验证码
+					//changeImageCode();
+    			}, function(result){
+    				M.alert(result.msg || '获取验证码失败！');
+    				//更改验证码
+					changeImageCode();
+    			});
+			} else{
+				$('#loginForm input[name="imageCode"]').addClass('invalid');
+			}
+		} else{
+			$('#loginForm input[name="mobile"]').addClass('invalid');
+		}
+	}
+	
+	//刷新图片验证码
+	$('#loginForm .fr').on('click', function(){
+		changeImageCode();
+	});
+	
+	//更改验证码
+	function changeImageCode(){
+		$('#loginForm .fr').attr('src', 'account/getImageValidCode?r=' + (new Date()).getTime());
+	}
+    
+})
+</script>

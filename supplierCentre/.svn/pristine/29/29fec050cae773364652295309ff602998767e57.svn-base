@@ -1,0 +1,57 @@
+package com.meitianhui.supplierCentre.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.meitianhui.supplierCentre.entity.SupplierLog;
+
+
+public interface SupplierMapper {
+
+	/***
+	 * 查询单个供应商信息
+	 * @param supper_id
+	 * @return
+	 * @author 丁硕
+	 * @date   2016年11月2日
+	 */
+	public Map<String, Object> queryOneSupplier(@Param("supplier_id") String supplier_id);
+	
+	/***
+	 * 查询供应商商业类型
+	 * @param supplier_id
+	 * @return
+	 * @author 丁硕
+	 * @date   2017年3月31日
+	 */
+	public Map<String, Object> querySupplierBussinesInfo(@Param("supplier_id") String supplier_id);
+	
+	/***
+	 * 查询供应商合同信息
+	 * @param supplier_id
+	 * @return
+	 * @author 丁硕
+	 * @date   2016年11月4日
+	 */
+	public List<Map<String, Object>> querySupplierContractList(@Param("supplier_id") String supplier_id);
+	
+	/***
+	 * 查询供应商日志信息
+	 * @param supplier_id
+	 * @return
+	 * @author 丁硕
+	 * @date   2016年11月2日
+	 */
+	public List<Map<String, Object>> querySupplierLogList(@Param("supplier_id") String supplier_id);
+	
+	/***
+	 * 添加供应商日志
+	 * @param log
+	 * @author 丁硕
+	 * @date   2016年11月4日
+	 */
+	public void addSupplierLog(SupplierLog log);
+
+}

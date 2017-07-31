@@ -1,0 +1,139 @@
+package com.meitianhui.supplierCentre.service.impl;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSONObject;
+import com.meitianhui.platform.entity.Page;
+import com.meitianhui.platform.entity.Pagetion;
+import com.meitianhui.platform.exception.BusinessException;
+import com.meitianhui.platform.utils.IDUtil;
+import com.meitianhui.supplierCentre.constant.PreGoodConstant;
+import com.meitianhui.supplierCentre.dao.AuditFlowMapper;
+import com.meitianhui.supplierCentre.dao.LoggerMapper;
+import com.meitianhui.supplierCentre.dao.PreSupplierMapper;
+import com.meitianhui.supplierCentre.entity.AuditFlow;
+import com.meitianhui.supplierCentre.entity.AuditLogger;
+import com.meitianhui.supplierCentre.entity.PreSupplier;
+import com.meitianhui.supplierCentre.service.PreSupplierService;
+@Service("preSupplierService")
+public class PreSupplierServiceImpl implements PreSupplierService{
+	
+	private Logger log = Logger.getLogger(PreSupplierServiceImpl.class);
+	
+	@Autowired
+	private PreSupplierMapper preSupplierMapper;
+	@Autowired
+	private AuditFlowMapper auditFlowMapper;
+	@Autowired
+	private LoggerMapper loggerMapper;
+
+
+
+	@Override
+	public PreSupplier saveOrUpdateGoods(PreSupplier preSupplier) throws BusinessException {
+		if( null  != preSupplier){
+			
+			if(StringUtils.isBlank(preSupplier.getSupplier_id())) {  //新增
+				preSupplier.setAudit_status(PreGoodConstant.status_assign);
+				preSupplier.setSupplier_id(IDUtil.getUUID()); 
+				preSupplier.setManufacturer(PreGoodConstant.manufacturer);
+				preSupplier.setCreated_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				preSupplierMapper.savePreSupplier(preSupplier);
+			} else{  //修改
+				preSupplier.setModified_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				preSupplierMapper.updatePreSupplier(preSupplier);
+			}
+			return preSupplier;
+		}
+		return null;
+	}
+
+	@Override
+	public List<PreSupplier> queryPreSupplierList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectPreSupplierList(map);
+	}
+
+	@Override
+	public List<PreSupplier> selectPreListByMobile(String mobile) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectPreListByMobile(mobile);
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void operateGoods(PreSupplier preSupplier) throws BusinessException {
+		try {
+			preSupplier.setModified_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			preSupplierMapper.updatePreSupplier(preSupplier);
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("supplier_id", preSupplier.getSupplier_id());
+			params.put("result", PreGoodConstant.status_sample);
+			AuditFlow trialFlow = auditFlowMapper.getAuditFlow(params);
+			AuditFlow auditFlow = new AuditFlow();
+			auditFlow.setSupplier_id(preSupplier.getSupplier_id());
+			auditFlow.setAction_by(trialFlow.getAction_by());
+			auditFlow.setIs_closed("N");
+			auditFlow.setResult(PreGoodConstant.status_review);
+			auditFlow.setRemark(PreGoodConstant.FLOWREMARK);
+			auditFlow.setFlow_id(IDUtil.getUUID());
+			auditFlow.setAction_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			auditFlow.setCreated_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			auditFlowMapper.addAuditFlow(auditFlow);
+			PreSupplier pres = preSupplierMapper.selectPreSupplierBySupplierId(preSupplier.getSupplier_id());
+			AuditLogger auditLogger = new AuditLogger();
+			auditLogger.setLog_id(IDUtil.getUUID());
+			auditLogger.setSupplier_id(pres.getSupplier_id());
+			auditLogger.setTracked_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			auditLogger.setCategory(PreGoodConstant.status_review);
+			JSONObject json = new JSONObject();
+			json.put("responsible", pres.getSupplier_name());
+			json.put("organization","");
+			json.put("remark", PreGoodConstant.FLOWREMARK);
+			auditLogger.setEvent_desc(json.toJSONString());
+			loggerMapper.addAuditLogger(auditLogger);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e);
+			throw new BusinessException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<PreSupplier> selectAllPreList(String mobile) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectAllPreList(mobile);
+	}
+
+	@Override
+	public Page selectPagePreList(int pageNum, int pageSize, String contact_tel) {
+		// TODO Auto-generated method stub
+		Pagetion.startPage(pageNum, pageSize);
+		preSupplierMapper.selectPagePreList(contact_tel);
+		return Pagetion.endPage();
+	}
+
+	@Override
+	public PreSupplier queryDetailPreSupplier(String supplier_id) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectOnePreSupplier(supplier_id);
+	}
+
+	@Override
+	public PreSupplier selectBasalGoods(String supplier_id) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectPreSupplierBySupplierId(supplier_id);
+	}
+
+
+}

@@ -1,0 +1,57 @@
+package com.meitianhui.supplierCentre.service.impl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.meitianhui.platform.exception.PlatformApiException;
+import com.meitianhui.platform.utils.IDUtil;
+import com.meitianhui.supplierCentre.constant.PreGoodConstant;
+import com.meitianhui.supplierCentre.dao.PreSupplierMapper;
+import com.meitianhui.supplierCentre.entity.PreSupplier;
+import com.meitianhui.supplierCentre.service.PreSupplierService;
+@Service("preSupplierService")
+public class PreSupplierServiceImpl implements PreSupplierService{
+	@Autowired
+	private PreSupplierMapper preSupplierMapper;
+
+
+
+	@Override
+	public PreSupplier saveOrUpdateGoods(PreSupplier preSupplier) throws PlatformApiException {
+		if( null  != preSupplier){
+			
+			if(StringUtils.isBlank(preSupplier.getSupplier_id())) {  //新增
+				preSupplier.setAudit_status(PreGoodConstant.status_assign);
+				preSupplier.setSupplier_id(IDUtil.getUUID()); 
+				preSupplier.setCreated_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				preSupplierMapper.savePreSupplier(preSupplier);
+			} else{  //修改
+				preSupplier.setModified_date(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				preSupplierMapper.updatePreSupplier(preSupplier);
+			}
+			return preSupplier;
+		}
+		return null;
+	}
+
+	@Override
+	public List<PreSupplier> queryPreSupplierList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectPreSupplierList(map);
+	}
+
+	@Override
+	public List<PreSupplier> selectPreListByMobile(String mobile) {
+		// TODO Auto-generated method stub
+		return preSupplierMapper.selectPreListByMobile(mobile);
+	}
+	
+
+
+}

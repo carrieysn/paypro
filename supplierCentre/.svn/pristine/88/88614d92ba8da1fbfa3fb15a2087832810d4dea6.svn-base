@@ -1,0 +1,94 @@
+package com.meitianhui.supplierCentre.entity;
+
+import java.io.Serializable;
+
+/**
+ * 商家会话 User
+ * @author Administrator
+ *
+ */
+public class SessionUser implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6023174715309101590L;
+	private String id; // ID
+	private String name; // 名称
+	private String no; // 编号
+	private String mobile; // 手机号码
+	private boolean isAdmin; // 是否系统账号
+	private String business_type; // 供应商类型
+	private String business_type_key; // 供应商精英
+
+	public SessionUser() {
+
+	}
+
+	public SessionUser(String id, String name, String no, String mobile, boolean isAdmin) {
+		this.id = id;
+		this.name = name;
+		this.no = no;
+		this.mobile = mobile;
+		this.isAdmin = isAdmin;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	public String getBusiness_type() {
+		return business_type;
+	}
+
+	public void setBusiness_type(String business_type) {
+		this.business_type = business_type;
+	}
+
+	public String getBusiness_type_key() {
+		return business_type_key;
+	}
+
+	public void setBusiness_type_key(String business_type_key) {
+		this.business_type_key = business_type_key;
+	}
+
+
+
+}

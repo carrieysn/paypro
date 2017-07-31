@@ -1,0 +1,28 @@
+package com.meitianhui.supplierCentre.constant;
+
+public class PreGoodConstant {
+
+	public static final String PS_ORDER_DATA_SOURCE = "SJLY_08";	//订单数据来源
+	public final static String key0 ="0";
+	public final static String key1 ="1";
+	public final static String key2 ="2";
+	public final static String key3 ="3";
+	public final static String key4 ="4";
+	public final static String key5 ="5";
+	public final static String key6 ="6";
+	
+	
+	public final static String status_assign="assign";//分配
+	public final static String status_trial="trial";//初审
+	public final static String status_sample="sample";//寄样
+	public final static String status_review="review";//复审
+	public final static String status_pass="pass";//通过
+	public final static String status_fail="fail";//驳回
+	public final static String DEFAULTXG = "不限购";
+	public final static String DEFAULTCATE = "全国";
+	public final static String FLOWREMARK = "商家操作寄样成功！待复审";
+	public final static String AGAINREMARK = "商家更新商品信息，重新提交审核！";
+	public final static String TAG = "件";
+	public final static String manufacturer = "领了么合作商家";
+
+}

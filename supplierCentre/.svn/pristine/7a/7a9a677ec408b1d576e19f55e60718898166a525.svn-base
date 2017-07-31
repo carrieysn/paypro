@@ -1,0 +1,134 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+       request.setAttribute("laytab", "attract");
+       request.setAttribute("laytabs", "goodindex");
+ %>
+<%@ include file="/common/layout/header.jsp"%>
+
+	<div class="process-wrap">
+		<div class="process-rel">
+			
+			<div class="tab-containe">
+				<div class="tab-wrap">
+					<div class="logo-ti">商家登录</div>
+					 <form id="loginForm">
+					<table class="tab-info" style="width:605px;">
+						<tr>
+							<td>手机号</td>
+							<td><input type="text" name="mobile" placeholder="输入联系人手机号" class="k430 icon-phone idt40"></td>
+						</tr>
+						<tr>
+							<td>验证码</td>
+							<td><input type="text" name="validCode" placeholder="输入短信验证码" class="k270 icon-sjh idt40"><a class="sms-yzm">获取验证码</a><a class="sms-hq" style="display:none;">获取验证码(60s)</a></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input value="确定" class="btn-x btn" type="submit"></td>
+						</tr>					
+					</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<!-- 	<div class="process-wrap">
+		<div class="process-rel">
+			<div class="step-wrap">
+				<div class="step">
+					
+				</div>
+			</div>
+			<div class="tab-containe">
+			    <form id="loginForm">
+				<div class="tab-wrap">
+					<table class="tab-info">
+						<tr>
+							<td>手机号</td>
+							<td><input type="text" name="mobile" placeholder="输入联系人手机号" class="k430"></td>
+						</tr>
+						<tr>
+							<td>验证码</td>
+							<td><input type="text" name="validCode" placeholder="输入短信验证码" class="k270"><a class="sms-yzm">获取验证码</a></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input value="确定" class="btn-x btn" type="submit"></td>
+						</tr>					
+					</table>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div> -->
+	
+<%@ include file="/common/layout/footer.jsp"%>
+
+ <script type="text/javascript">
+   var interval = undefined, time = 0;
+	$(function(){
+		var oHeight = $('.tab-containe').height();
+		$('.process-wrap').css('height',oHeight+177);
+		
+		$('#loginForm').on('submit', function(){
+			
+			 var params = M.formatElement('#loginForm');
+    		if(params.mobile && (/^1[3|4|5|7|8][0-9]{9}$/.test(params.mobile))){
+    			$('#loginForm input[name="mobile"]').removeClass('invalid');
+    			 // if(params.validCode){
+    				$('#loginForm input[name="validCode"]').removeClass('invalid');
+    				//验证登录
+        			M.post('${ctx}/telLogin', params, function(result){
+        				window.location.href = '${ctx}/presupplier/list';
+        			}, function(result){
+        				M.alert(result.msg || '登录失败！');
+        			});
+    			    /*  } else{
+    				   M.alert('请输入验证码！');
+    				$('#loginForm input[name="validCode"]').addClass('invalid');
+    			  }       */
+    		} else{
+    			$('#loginForm input[name="mobile"]').addClass('invalid');
+    		}
+			return false;
+		});
+   		//获取验证码
+		bindGetValidCode();
+		function bindGetValidCode(){
+    		$('#loginForm .sms-yzm').on('click', function(){
+    			getValidCode();
+    			time = 60;
+    		});
+		}
+		function getValidCode(){
+			var mobile = $('#loginForm input[name="mobile"]').val();
+			
+			if(mobile && (/^1[3|4|5|7|8][0-9]{9}$/.test(mobile))){
+				$('#loginForm input[name="mobile"]').removeClass('invalid');
+    				M.post('getValidCode',{'mobile': mobile}, function(result){
+						//获取成功
+						$('#loginForm .sms-yzm').hide();
+	    				$('#loginForm .sms-hq').addClass('icon-invalid').off('click').html('获取验证码(60s)');
+	    				$('#loginForm .sms-hq').show();
+	    				interval = window.setInterval(function(){
+	    		    		time--;
+	    		    		if(time < 1){
+	    		    			window.clearInterval(interval);
+	    		    			$('#loginForm .sms-yzm').show();
+	    		    			bindGetValidCode();
+	    		    		} else{
+    	    		    		$('#loginForm .sms-hq').text('获取验证码('+time+'s)');
+	    		    		}
+	    		    	 }, 1000);
+	    			}, function(result){
+	    				M.alert(result.msg || '获取验证码失败！');
+	    				//更改验证码
+						changeImageCode();
+	    			});
+				
+			} else{
+				$('#loginForm input[name="mobile"]').addClass('invalid');
+			}
+		}
+	})
+</script>

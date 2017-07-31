@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%
+       request.setAttribute("laytab", "news");
+    %>
+    
+<%@ include file="/common/layout/header.jsp"%>
+	<div class="banner-wrap"><img src="${ctx}/common/static/images/banner2.jpg"></div>
+	<div class="content">
+		<div class="god-title">最新资讯</div>
+		<ul class="information-list">
+			<li>
+                <a href="${ctx}/newshow?zid=s">
+                    <div class="list-img"><img src="${ctx}/common/static/images/20170422-2.jpg"></div>
+                <div class="ti">每天惠大学南区分院揭牌仪式&业务落地发布会在湖南株洲举行</div>
+                <div class="nr">4月22日，每天惠大学南区分院揭牌仪式暨业务落地发布会在湖南株洲正式举行。每天惠集团CEO阳明... </div></a>
+            </li>
+            <li>
+                <a href="${ctx}/newshow?zid=r">
+                    <div class="list-img"><img src="${ctx}/common/static/images/20170329-2.jpg"></div>
+                <div class="ti">每天惠大学北区分院揭牌仪式&业务落地发布会在山东隆重举行 </div>
+                <div class="nr">行业新领袖，荣耀再启程！2017年3月29日，时隔每天惠大学正式成立10天之后，每天惠大学北区分...</div></a>
+            </li>
+            <li>
+                <a href="${ctx}/newshow?zid=t">
+                    <div class="list-img"><img src="${ctx}/common/static/images/20170319-1.jpg"></div>
+                <div class="ti">“连锁中国·实惠人民”每天惠品牌文化升级发布会&每天惠大学成立典礼</div>
+                <div class="nr">每天惠之前品牌大胆采用“逆向思维”的创业逻辑，在业内创造了量的奇迹。但品牌的奇迹才刚开始...</div></a>
+            </li>
+			 <li>
+				<a href="${ctx}/newshow?zid=f"><img src="${ctx}/common/static/images/zx1.jpg"></a>
+				<div class="ti">每天惠集团交流走访团6月完成11省巡回会议</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+			<li>
+				<a href="javascript:void(0);"><img src="${ctx}/common/static/images/zx2.jpg"></a>
+				<div class="ti">赢在2016年度大会精彩瞬间</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开。</div>
+			</li>
+			<li>
+				<a href="javascript:void(0);"><img src="${ctx}/common/static/images/zx3.jpg"></a>
+				<div class="ti">赢在2016之惠言慧语</div>
+				<div class="nr">入夏以来，以晦明、天华、灵珠为固定团队，紫阳、明剑、云骢等随时支援的走访团从深圳出发，一月时间，完成11省的落地访问并主持召开当地市公司会议。</div>
+			</li>
+		</ul>
+		<!-- <div class="pages">
+			<a class="sel">1</a>
+			<a>2</a>
+			<a>3</a>
+		</div> -->
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+

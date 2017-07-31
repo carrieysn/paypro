@@ -1,0 +1,360 @@
+package com.meitianhui.supplierCentre.entity;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import com.meitianhui.platform.utils.StringUtil;
+import com.meitianhui.supplierCentre.constant.PreGoodConstant;
+
+public class PreSupplier implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8625828775893226777L;
+	private String supplier_id;//供应商标识
+	private String supplier_name;//供应商名称
+	private String area_id;//行政地区
+	private String address;//详细地址
+	private String contact_person;//联系人
+	private String introducer;//介绍人
+	private String contact_tel;//联系电话
+	private String title;//产品标题
+	private String desc1;//产品描述
+	private String pic_detail_info;//商品链接
+	private String pic_info;//产品图片信息，JSON格式
+	private String category;//品类，可选值：
+	private String specification;//规格
+	private String pack;//包装
+	private String manufacturer;//生产商
+	private String label;//标签
+	private BigDecimal market_price;//市场价
+	private BigDecimal settled_price;//结算价
+	private BigDecimal discount_price;//优惠价
+	private BigDecimal service_fee;//服务费
+	private Integer stock_qty;//库存量
+	private Integer min_buy_qty;//起订量
+	private Integer max_buy_qty;//限购量
+	private String valid_thru;//有效期
+	private String logistics;//物流信息
+	private String delivery_area;//配送地区
+	private String audit_status;//审批状态，可选值：trial（初审）sample（寄样）review（复审）pass（通过）fail（驳回）
+	private String created_date; // 创建时间
+	private String modified_date;//修改时间
+	private String remark;//备注
+	private String biz_remark;//商家备注
+	
+	//以下为显示页面字段
+	private String path;//地区
+	private String resultdesc;//审批结果描述
+	private Object picList;
+	private String logisticCompany;//物流公司
+	private String logisticCode;//物流单号
+	private String purchMax;//限购量
+	private String introducerTel;//介绍人电话
+	
+	
+	
+	public String getSupplier_id() {
+		return supplier_id;
+	}
+	public void setSupplier_id(String supplier_id) {
+		this.supplier_id = supplier_id;
+	}
+	public String getSupplier_name() {
+		return supplier_name;
+	}
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
+	}
+	public String getArea_id() {
+		return area_id;
+	}
+	public void setArea_id(String area_id) {
+		this.area_id = area_id;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getContact_person() {
+		return contact_person;
+	}
+	public void setContact_person(String contact_person) {
+		this.contact_person = contact_person;
+	}
+	public String getIntroducer() {
+		
+		if(StringUtil.isEmpty(introducer)){
+			return "";
+		}else{
+		    return introducer;
+		}
+	}
+	public void setIntroducer(String introducer) {
+		this.introducer = introducer;
+	}
+	public String getContact_tel() {
+		return contact_tel;
+	}
+	public void setContact_tel(String contact_tel) {
+		this.contact_tel = contact_tel;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getDesc1() {
+		if(StringUtil.isEmpty(desc1)){
+			return "";
+		}else{
+		    return desc1;
+		}
+	}
+	public String getPic_detail_info() {
+		return pic_detail_info;
+	}
+	public void setPic_detail_info(String pic_detail_info) {
+		this.pic_detail_info = pic_detail_info;
+	}
+	public void setDesc1(String desc1) {
+		this.desc1 = desc1;
+	}
+	public String getPic_info() {
+		return pic_info;
+	}
+	public void setPic_info(String pic_info) {
+		this.pic_info = pic_info;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getSpecification() {
+		if(StringUtil.isEmpty(specification)){
+			return "";
+		}else{
+		    return specification;
+		}
+	}
+	public void setSpecification(String specification) {
+		this.specification = specification;
+	}
+	public String getPack() {
+		if(StringUtil.isEmpty(pack)){
+			return "";
+		}else{
+		    return pack;
+		}
+	}
+	public void setPack(String pack) {
+		this.pack = pack;
+	}
+	public String getManufacturer() {
+		if(StringUtil.isEmpty(manufacturer)){
+			return "";
+		}else{
+		    return manufacturer;
+		}
+	}
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+	public String getLabel() {
+		if(StringUtil.isEmpty(label)){
+			return "";
+		}else{
+		    return label;
+		}
+	}
+	public void setLabel(String label) {
+		this.label = label;
+	}
+	public BigDecimal getMarket_price() {
+		return market_price;
+	}
+	public void setMarket_price(BigDecimal market_price) {
+		this.market_price = market_price;
+	}
+	public BigDecimal getSettled_price() {
+		return settled_price;
+	}
+	public void setSettled_price(BigDecimal settled_price) {
+		this.settled_price = settled_price;
+	}
+	public BigDecimal getDiscount_price() {
+		return discount_price;
+	}
+	public void setDiscount_price(BigDecimal discount_price) {
+		this.discount_price = discount_price;
+	}
+	
+	public BigDecimal getService_fee() {
+		return service_fee;
+	}
+	public void setService_fee(BigDecimal service_fee) {
+		this.service_fee = service_fee;
+	}
+	public Integer getStock_qty() {
+		return stock_qty;
+	}
+	public void setStock_qty(Integer stock_qty) {
+		this.stock_qty = stock_qty;
+	}
+	public Integer getMin_buy_qty() {
+		return min_buy_qty;
+	}
+	public void setMin_buy_qty(Integer min_buy_qty) {
+		this.min_buy_qty = min_buy_qty;
+	}
+	public Integer getMax_buy_qty() {
+		return max_buy_qty;
+	}
+	public void setMax_buy_qty(Integer max_buy_qty) {
+		this.max_buy_qty = max_buy_qty;
+	}
+	public String getValid_thru() {
+		if(StringUtil.isEmpty(valid_thru)){
+			return "";
+		}else{
+		    return valid_thru;
+		}
+	}
+	public void setValid_thru(String valid_thru) {
+		this.valid_thru = valid_thru;
+	}
+	public String getLogistics() {
+		if(StringUtil.isEmpty(logistics)){
+			return "";
+		}else{
+		    return logistics;
+		}
+	}
+	public void setLogistics(String logistics) {
+		this.logistics = logistics;
+	}
+	public String getDelivery_area() {
+		if(StringUtil.isEmpty(delivery_area)){
+			return "";
+		}else{
+		    return delivery_area;
+		}
+	}
+	public void setDelivery_area(String delivery_area) {
+		if(StringUtil.isEmpty(delivery_area)){
+			this.delivery_area = PreGoodConstant.DEFAULTCATE;
+		}else{
+		    this.delivery_area = delivery_area;
+		}
+	}
+	public String getAudit_status() {
+		return audit_status;
+	}
+	public void setAudit_status(String audit_status) {
+		this.audit_status = audit_status;
+	}
+	public String getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(String created_date) {
+		this.created_date = created_date;
+	}
+	public String getModified_date() {
+		return modified_date;
+	}
+	public void setModified_date(String modified_date) {
+		this.modified_date = modified_date;
+	}
+	public String getRemark() {
+		if(StringUtil.isEmpty(remark)){
+			return "";
+		}else{
+		    return remark;
+		}
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public String getBiz_remark() {
+		if(StringUtil.isEmpty(biz_remark)){
+			return "";
+		}else{
+		    return biz_remark;
+		}
+	}
+	public void setBiz_remark(String biz_remark) {
+		this.biz_remark = biz_remark;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public String getResultdesc() {
+		return resultdesc;
+	}
+	public void setResultdesc(String resultdesc) {
+		this.resultdesc = resultdesc;
+	}
+	public Object getPicList() {
+		return picList;
+	}
+	public void setPicList(Object picList) {
+		this.picList = picList;
+	}
+	public String getLogisticCompany() {
+		if(StringUtil.isEmpty(logisticCompany)){
+			return "";
+		}else{
+		    return logisticCompany;
+		}
+	}
+	public void setLogisticCompany(String logisticCompany) {
+		this.logisticCompany = logisticCompany;
+	}
+	public String getLogisticCode() {
+		if(StringUtil.isEmpty(logisticCode)){
+			return "";
+		}else{
+		    return logisticCode;
+		}
+	}
+	public void setLogisticCode(String logisticCode) {
+		this.logisticCode = logisticCode;
+	}
+	public String getPurchMax() {
+		
+		if(null == max_buy_qty){
+			return PreGoodConstant.DEFAULTXG;
+		}else{
+			purchMax = max_buy_qty+PreGoodConstant.TAG;
+		}
+		
+		return purchMax;
+	}
+	public void setPurchMax(String purchMax) {
+		this.purchMax = purchMax;
+	}
+	public String getIntroducerTel() {
+		if(StringUtil.isEmpty(introducerTel)){
+			return "";
+		}else{
+		    return introducerTel;
+		}
+	}
+	public void setIntroducerTel(String introducerTel) {
+		this.introducerTel = introducerTel;
+	}
+	
+	
+	
+	
+
+}

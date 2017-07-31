@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.supplierCentre.dao.SupplierMapper">
+	
+	 <sql id="supplier_base_column">
+         es.supplier_id, es.supplier_no, es.supplier_name, es.desc1, es.desc2, es.area_id, es.address, 
+         es.contact_person, es.contact_tel, es.email, es.is_violated, es.registered_date, es.label,es.business_type_key,
+         es.business_circle, es.id_card_pic_path, es.certification_pic_path, es.licence_pic_path, es.logo_pic_path, es.old_facade_pic_path, es.new_facade_pic_path,
+         es.old_stores_pic_path, es.new_stores_pic_path, es.opened_pic_path, es.other_pic_path, es.remark, es.sort_order,es.legal_person,es.finance_contact,
+         es.nature_business,es.registered_capital,es.created_date,es.legal_person_tel,es.finance_contact_tel,es.contractor,es.follower_id
+    </sql>
+	
+	<!-- 查询单个供应商信息 -->
+	<select id="queryOneSupplier" parameterType="String" resultType="hashmap">
+		select <include refid="supplier_base_column" />, 
+    	  ea.path area_path,edd2.data_val nature_business_val,et.team_name
+    	FROM ed_supplier es
+		LEFT JOIN ed_area ea ON es.area_id = ea.area_id
+		LEFT JOIN ed_data_dict edd2 ON es.nature_business = edd2.data_key
+		LEFT JOIN ed_team et On et.team_id = es.contractor
+    	WHERE es.supplier_id=#{supplier_id} and es.sys_status='normal'
+	</select>
+	
+	<!-- 通过手机号查询供应商 -->
+	<select id="selectSupplierByTel" parameterType="String" resultType="hashmap">
+		select es.supplier_id, es.supplier_no, es.supplier_name,u.mobile,u.name
+    	FROM ed_supplier es LEFT JOIN ed_user u ON es.follower_id = u.user_id
+    	WHERE es.contact_tel=#{contact_tel} and es.sys_status='normal'
+	</select>
+	
+	<!-- 查询供应商商业类型 -->
+	<select id="querySupplierBussinesInfo" parameterType="String" resultType="hashmap">
+		SELECT es.supplier_id,es.business_type_key, GROUP_CONCAT(edd.data_val) business_type_val from ed_supplier es 
+		INNER JOIN ed_data_dict edd ON es.business_type_key LIKE CONCAT('%',edd.data_key,'%')
+		WHERE es.supplier_id=#{supplier_id}
+	</select>
+	
+	<!-- 查询供应商合同信息 -->
+	<select id="querySupplierContractList" parameterType="String" resultType="hashmap">
+	 SELECT esc.contract_id,esc.supplier_id,esc.contract_no,DATE_FORMAT(esc.contract_date, '%Y-%m-%d') contract_date,DATE_FORMAT(esc.expired_date, '%Y-%m-%d') expired_date, 
+	 	esc.contract_pic_path,esc.remark,et.team_name
+	 FROM ed_supplier_contract esc LEFT JOIN ed_team et ON esc.contractor = et.team_id 
+	 WHERE supplier_id=#{supplier_id} ORDER BY esc.created_date DESC
+	</select>
+	
+	<!-- 查询供应商日志信息 -->
+	<select id="querySupplierLogList" parameterType="String" resultType="hashmap">
+		select log_id, category_key, tracked_date, event from ed_supplier_log
+		 where supplier_id=#{supplier_id} order by tracked_date DESC
+	</select>
+	
+	<!-- 添加供应商日志 -->
+	<insert id="addSupplierLog" parameterType="SupplierLog">
+		insert into ed_supplier_log(
+			log_id, supplier_id, category_key, tracked_by, tracked_date, event
+		) values(
+			#{log_id}, #{supplier_id}, #{category_key}, #{tracked_by}, #{tracked_date}, #{event}
+		)
+	</insert>
+	
+</mapper>

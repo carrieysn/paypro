@@ -1,0 +1,30 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+	<div class="footer-wrap">
+		<div class="footer">
+			<ul class="nav">
+				<li><a href="#">网站地图</a></li>
+				<li><a href="#">关于我们</a></li>
+				<li><a href="#">联系我们</a></li>
+				<li><a href="#">相关平台</a></li>
+				<li><a href="#">加盟合作</a></li>
+			</ul>
+			<span class="hotline">品牌服务热线<em>4000 998 809</em></span>
+		</div>
+		<div class="copyright-wrap">
+			<div class="copyright">
+				<div class="fl">
+					<p class="ft14">深圳市每天惠电子商务有限公司</p>
+					<p>Shenzhen Everyday Special E-Business Co.Limited</p>
+					<br/>
+					<p>Add：广东省深圳市福田区车公庙泰然科技园204栋西座3楼  P.C：518000</p>
+					<p>Tel：+86 755 8322 5878    E-mail：service@meitianhui.com    Web：www.meitianhui.com</p>
+				</div>
+				<div class="fr">
+					<p><img src="${ctx}/common/static/images/sc.jpg">每天惠商城</p>
+					<p><img src="${ctx}/common/static/images/wx.jpg">每天惠官方微信</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

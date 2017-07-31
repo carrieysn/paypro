@@ -1,0 +1,128 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+       request.setAttribute("laytab", "attract");
+       request.setAttribute("laytabs", "goodindex");
+ %>
+<%@ include file="/common/layout/header.jsp"%>
+
+	<div class="process-wrap">
+		<div class="process-rel">
+			
+			<div class="tab-containe">
+				<div class="tab-wrap">
+					<div class="logo-ti">商家状态查询</div>
+					 <form id="loginForm">
+					<table class="tab-info" style="width:725px;margin-left:290px;">
+						<tr>
+							<td width="64">手机号</td>
+							<td>
+							<label class="wth430 icon-phone" id="labeltel" style="float:left;">
+							<input type="text" name="mobile" placeholder="输入联系人手机号" >
+							</label>
+							<span class="error"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>验证码</td>
+							<td>
+							<label class="wth270 icon-sjh" id="labelcode">
+							<input type="text" name="validCode" placeholder="输入短信验证码"></label><a class="sms-yzm">获取验证码</a><!-- <a class="sms-hq" style="display:none;">获取验证码(60s)</a> -->
+							<span class="error"></span>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input value="返回" class="btn-x btn" type="button" id="togoback" style="border:2px solid #e95613;background:none;color:#e95613;"> <input value="查询" class="btn-x btn" type="submit"></td>
+						</tr>					
+					</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+
+ <script type="text/javascript">
+   var interval = undefined, time = 0;
+	$(function(){
+		var oHeight = $('.tab-containe').height();
+		$('.process-wrap').css('height',oHeight+177);
+		
+		$('#loginForm').on('submit', function(){
+		    var params = M.formatElement('#loginForm');
+		    if(params.mobile.length == 0){
+		    	$('#labeltel').addClass('invalid');
+		    	$('#labeltel').next('span').html('手机号不能为空！');
+		    	$('#labeltel').next('span').css('display','block');
+		    	return false;
+		    } 
+		    if((/^1[3|4|5|7|8][0-9]{9}$/.test(params.mobile))){
+    			$('#labeltel').removeClass('invalid');
+    			$('#labeltel').next('span').css('display','none');
+    			  if(params.validCode){
+    				$('#labelcode').removeClass('invalid');
+    				$('#labelcode').siblings('span').css('display','none');
+    				//验证登录
+        			M.post('${ctx}/telLogin', params, function(result){
+        				window.location.href = '${ctx}/presupplier/list';
+        			}, function(result){
+        				M.alert(result.msg || '登录失败！');
+        			});
+    			   } else{
+    				   $('#labelcode').siblings('span').html('请输入验证码！');
+    			       $('#labelcode').siblings('span').css('display','block');
+    				   $('#labelcode').addClass('invalid');
+    			  }       
+    		} else{
+    			$('#labeltel').addClass('invalid');
+    			$('#labeltel').next('span').html('请输入正确手机号！');
+    			$('#labeltel').next('span').css('display','block');
+    		}
+			return false;
+		});
+   		//获取验证码
+		bindGetValidCode();
+		function bindGetValidCode(){
+    		$('#loginForm .sms-yzm').on('click', function(){
+    			getValidCode();
+    			time = 60;
+    		});
+		}
+		function getValidCode(){
+			var mobile = $('#loginForm input[name="mobile"]').val();
+			if(mobile && (/^1[3|4|5|7|8][0-9]{9}$/.test(mobile))){
+				$('#labeltel').removeClass('invalid');
+    				M.post('getValidCode',{'mobile': mobile}, function(result){
+    					if(result.status == '1'){
+							//获取成功
+		    				$('#loginForm .sms-yzm').addClass('icon-invalid').off('click').html('获取验证码(60s)');
+		    				interval = window.setInterval(function(){
+		    		    		time--;
+		    		    		if(time < 1){
+		    		    			window.clearInterval(interval);
+		    		    			$('#loginForm .sms-yzm').removeClass('icon-invalid').text('获取验证码');
+		    		    			bindGetValidCode();
+		    		    		} else{
+	    	    		    		$('#loginForm .sms-yzm').text('获取验证码('+time+'s)');
+		    		    		}
+		    		    	 }, 1000);
+    					}
+	    			}, function(result){
+	    				M.alert(result.msg || '获取验证码失败！');
+	    			});
+				
+			} else{
+				$('#labeltel').addClass('invalid');
+			}
+		}
+		
+		$("#loginForm input").on('focus',function(){
+			$(this).parent().siblings('span').css('display','none');
+			$(this).parent().removeClass('invalid');
+		})
+		$("#togoback").on('click',function(){
+			window.location.href = '${ctx}/zsindex';
+		})
+	    
+	})
+</script>

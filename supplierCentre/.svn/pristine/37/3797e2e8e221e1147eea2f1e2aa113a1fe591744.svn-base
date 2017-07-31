@@ -1,0 +1,209 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+       request.setAttribute("laytab", "attract");
+       request.setAttribute("laytabs", "goodindex");
+ %>
+<%@ include file="/common/layout/header.jsp"%>
+<div class="process-wrap process-js1">
+		<div class="process-rel">
+			<div class="step-wrap background-none">
+				<div class="step">
+					<p class="fl current">每天惠商家中心 > 商家报名 > 商品报名</p>
+					<ul class="step-list">
+						<li><i>1</i>商家资料</li>
+						<li class="sel"><i>2</i>产品资料</li>
+						<li class="sel"><i>3</i>合作方案</li>
+					</ul>
+				</div>
+			</div>
+			<form id="presupplier_form" onsubmit="return false;">
+			<div class="tab-containe abs-top1" style="display: ${empty preSupplier ? '':'none'}">
+				<div class="tab-wrap">
+					<table class="tab-info">
+						<tr>
+							<td align="right"><em>*</em>店铺名称：</td>
+							<td><input type="text" class="k430" placeholder="请输入店铺名称，不超过25个字" name="supplier_name" value="${preSupplier.supplier_name}" nullmsg="请输入店铺名称！" dataType="*1-25" errormsg="店铺名称不超过25个字"></td>
+						</tr>
+						<tr>
+							<td align="right" valign="top"><em>*</em>联系人名：</td>
+							<td><input type="text" placeholder="请输入联系人姓名" class="k430" name="contact_person" value="${preSupplier.contact_person}"  datatype="*1-30" nullmsg="请输入联系人姓名！" errormsg="联系人不超过30个字"></td>
+						</tr>
+						
+						<tr>
+							<td align="right"><em>*</em>联系人手机号：</td>
+							<td><input type="text" placeholder="请输入联系人手机号" class="k430" name="contact_tel" value="${preSupplier.contact_tel}"  datatype="m"  nullmsg="请输入联系人手机号！" errormsg="请输入正确手机号"></td>
+						</tr>
+
+						<tr>
+							<td align="right">介绍人名：</td>
+							<td><input type="text" placeholder="请输入介绍人姓名" class="k430" name="introducer"  value="${preSupplier.introducer}"  datatype="*1-30"  errormsg="介绍人不超过30个字" ignore="ignore" ></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><label class="lbl-pack sel-pack" id ="agressbtn">我已经仔细阅读并同意<a onclick="protocolShow()">《商家合作协议》</a></label></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="javascript:void(0);" class="btn-x btn btn-next1" onclick="btnNext(1);">下一步</a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="tab-containe abs-top2" style="display: ${empty preSupplier ? 'none':''}">
+				<div class="tab-wrap">
+					<table class="tab-info">
+						<tr>
+							<td align="right" width="120"><em>*</em>产品名称：</td>
+							<td><input type="text" class="k430" placeholder="请输入产品名称，8~20个字" onkeydown="checktitle(this);"  name="title"  datatype="*8-20" nullmsg="请输入产品名称！" errormsg="产品名称8~20个字"></td>
+						</tr>
+						<tr>
+							<td align="right" valign="top" width="120"><em class="middle">*</em>产品链接：</td>
+							<td><input type="text" class="k430" placeholder="请输入产品链接，如淘宝、天猫链接" name="pic_url"  datatype="validateLink" nullmsg="请输入产品链接！" errormsg="产品链接的长度在1~255个字符之间"></td>
+						</tr>
+						<tr>
+							<td align="right" valign="top" width="120"><em>*</em>产品图片：</td>
+							<td>
+							    <input type="hidden" name="pic_info" id="pic_info">
+								<a class="add-img" >上传图片</a>
+								<div class="god-img-list" style="display: none;" id="imglist">
+							      <!-- 		<a class="cg-img product-img"><img src="images/img.jpg"><em></em></a> -->
+									
+								</div>
+								<p class="txt-point">最多上传5张800x800，大小不超过200KB的JPG、PNG格式图片</p>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" valign="top" width="120"><em>*</em>产品详情：</td>
+							<td>
+							    <input type="hidden" name="pic_detail_info" id="pic_detail_info">
+								<a class="add-img" >上传图片</a>
+								<div class="god-img-list" style="display: none;" id="imgdetaillist">
+									<!-- <a class="cg-img product-img"><img src="images/img.jpg"><em></em></a> -->
+								</div>
+								<p class="txt-point">最多上传10张800x800，大小不超过200KB的JPG、PNG格式图片</p>
+							</td>
+						</tr>
+						<tr>
+							<td align="right" valign="top" width="120"><em class="middle">*</em>产品描述：</td>
+							<td><textarea  class="k430" placeholder="请输入产品描述" onkeydown="checkdesc(this);" name="desc1"  datatype="*20-120" nullmsg="请输入产品描述！" errormsg="请输入20-120个字！"></textarea></td>
+						</tr>
+						<tr>
+							<td align="right"><em>*</em>类目：</td>
+							<td>
+							<select class="k430" name="category" datatype="*" nullmsg="请选择类目！">
+								<option value="">选择类目</option>
+					            <c:forEach items="${appEnumList}" var="appEnum" varStatus="enumStatus">
+										<c:forEach items="${appEnum.app_display_area_list}" var="displayArea" varStatus="status">
+											<option value="${displayArea.display_area}">${displayArea.display_area}</option>
+										</c:forEach>
+								</c:forEach>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right"><em>*</em>规格：</td>
+							<td><input type="text" placeholder="如：200ML 或 3米" class="k430" name="specification"  datatype="*1-20" nullmsg="请输入规格！" errormsg="产品规格的长度在1~20个字符之间"></td>
+						</tr>
+						<tr>
+							<td align="right"><em>*</em>库存：</td>
+							<td><input type="text" placeholder="请输入库存数，最低100" class="k430" name="stock_qty"  datatype="/^[1-9]{1}\d{2,}$/" nullmsg="请输入库存量！" errormsg="库存最小值为100！"></td>
+						</tr>
+						<tr>
+							<td align="right">标签：</td>
+							<td><input type="text" placeholder="多个标签用“空格”隔开" class="k430"  name="label"  datatype="*1-200" errormsg="标签的长度在1~200个字符之间！" ignore="ignore" onkeyup="value=value.replace(/[!@#$%^&*]/,'') "></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="javascript:void(0);" class="btn-s btn btn-Previous2">上一步</a><a href="javascript:void(0);" class="btn-x btn btn-next2" id="addBut" onclick="btnNext(2);">下一步</a></td>
+						</tr>
+					</table>
+					
+				</div>
+			</div>
+			<div class="tab-containe abs-top3" style="display: none;">
+				<div class="tab-wrap">
+					<table class="tab-info">
+						<tr>
+							<td align="right"><em>*</em>当前售价：</td>
+							<td><input type="text" placeholder="商品的当前销售价格，最多两位小数。如：23.50" class="k430" name="market_price" datatype="maxPrice" nullmsg="请输入当前售价！" errormsg="当前售价在1~9999999之间!"  onkeyup="validateNum(this)"></td>
+						</tr>
+						
+						<tr>
+							<td align="right"><em>*</em>结算佣金：</td>
+							<td><input type="text" placeholder="商家与平台每单结算佣金，最多两位小数。如：15.60" class="k430" name="settled_price"  datatype="setPrice"  onkeyup="validateNum(this)" errormsg="结算佣金在1~9999999之间！"></td>
+						</tr>
+						
+						<tr>
+							<td align="right" valign="top">备注：</td>
+							<td><textarea  class="k430" placeholder="如：产品优势、卖点、基本属性等。" datatype="*1-500"  errormsg="备注不超过500个字" ignore="ignore"></textarea></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><a href="javascript:void(0);" class="btn-s btn btn-Previous3">上一步</a><a href="javascript:void(0);" class="btn-x btn btn-refer" onclick="btnNext(3);">提交</a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			</form>
+			<div class="tab-containe abs-top4" style="display: none;">
+				<div class="tab-wrap">
+					<div class="submit-bor">
+						<div class="ft40">报名成功</div>
+						<div class="bianma">商品活动编码：<small id="activecode"></small></div>
+						<div class="ft18">工作人员将在<i>1-3个工作日</i>对该商品进行审核，请耐心等待！
+							您可以在首页或者商家报名页面——领了么广告区点击<small>“查看状态”</small>按钮查询审核状态</div>
+						<div class="tab-info"><a class="btn-s btn" id="checkdetail">查看商品详情</a><a class="btn-x btn" id="goOnRecomm">继续报名商品</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	            
+<%@ include file="/common/layout/footer.jsp"%>
+<script type="text/javascript" src="${static_resource_server}/common/third-part/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="${ctx}/common/static/js/areaSelector.js"></script>
+	<script type="text/javascript" src="${ctx}/common/static/js/thelper.js"></script>
+	<script type="text/javascript">
+		var goods_display_area = '${goods.display_area}', goods_pic_info = '${goods.pic_info}', goods_pic_detail_info = '${goods.pic_detail_info}';
+	</script>
+    <script type="text/javascript" src="${ctx}/common/static/goods/js/addGood.js"></script>
+
+<script>
+$(function(){
+	$('.lbl-pack').click(function(){
+		$(this).toggleClass('sel-pack');
+	})
+	var oHeight = $('.abs-top1').height();
+	//$('.process-wrap').css('height',oHeight+220);
+ 	 /*  $('.btn-next1').click(function(){
+		$('.process-rel .tab-containe').hide();
+		$('.abs-top2').show();
+		$('.step-list li').eq(1).removeClass('sel');
+		var oHeight2 = $('.abs-top2').height();
+		//$('.process-wrap').css('height',oHeight2+220);
+	})
+	$('.btn-next2').click(function(){
+		$('.process-rel .tab-containe').hide();
+		$('.abs-top3').show();
+		$('.step-list li').eq(2).removeClass('sel');
+		var oHeight3 = $('.abs-top3').height();
+		//$('.process-wrap').css('height',oHeight3+220);
+	})   */
+	$('.btn-Previous2').click(function(){
+		$('.process-rel .tab-containe').hide();
+		$('.abs-top1').show();
+		$('.step-list li').eq(1).addClass('sel');
+		var oHeight = $('.abs-top1').height();
+		//$('.process-wrap').css('height',oHeight+220);
+	})
+	$('.btn-Previous3').click(function(){
+		$('.process-rel .tab-containe').hide();
+		$('.abs-top2').show();
+		$('.step-list li').eq(2).addClass('sel');
+		var oHeight2 = $('.abs-top2').height();
+		//$('.process-wrap').css('height',oHeight2+220);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+	})
+	
+
+})
+</script>

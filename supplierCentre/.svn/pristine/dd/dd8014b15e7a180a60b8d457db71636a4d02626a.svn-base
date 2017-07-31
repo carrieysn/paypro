@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.supplierCentre.dao.PreSupplierMapper">
+     <sql id="query_column_list">
+	  es.supplier_id,
+	  es.supplier_name,
+	  es.area_id,
+	  es.address,
+	  es.contact_person,
+	  es.introducer,
+	  es.contact_tel,
+	  es.title,
+	  es.desc1,
+	  es.pic_info,
+	  es.category,
+	  es.specification,
+	  es.pack,
+	  es.manufacturer,
+	  es.label, 
+	  es.market_price,
+	  es.settled_price,
+	  es.stock_qty,
+	  es.min_buy_qty,
+	  es.max_buy_qty,
+	  es.valid_thru,
+	  es.logistics,
+	  es.delivery_area,
+	  es.audit_status,
+	  es.created_date,
+	  es.modified_date,
+	  es.remark,
+	  ea.path
+     </sql>
+     <sql id="base_column_list">
+      	   supplier_id,supplier_name,area_id,address,contact_person,introducer,contact_tel,title,desc1,pic_info,category,specification,pack,manufacturer,label, market_price,settled_price,stock_qty,min_buy_qty,
+           max_buy_qty,valid_thru,logistics,delivery_area,audit_status,created_date,modified_date,remark
+     </sql>
+    
+     <sql id="queryGlobal_column_list">
+		  es.supplier_id,es.supplier_name,es.area_id,es.address,es.contact_person,es.introducer,es.contact_tel,es.title,es.desc1,es.pic_info,
+		  es.category,es.specification,es.pack,es.manufacturer,es.label, es.market_price,es.settled_price,es.stock_qty,es.min_buy_qty,es.max_buy_qty,
+		  es.valid_thru,es.logistics,es.delivery_area,es.audit_status,es.created_date,es.modified_date,es.remark,ea.path,ef.remark resultdesc
+     </sql>
+     
+    <!-- 新增推荐商品信息 -->
+ 	<insert id="savePreSupplier" parameterType="PreSupplier">  
+	     insert into ed_pre_supplier(supplier_id,supplier_name,area_id,address,contact_person,introducer,contact_tel,title,desc1,pic_info,category,
+	       specification,pack,manufacturer,label, market_price,settled_price,stock_qty,min_buy_qty,max_buy_qty,valid_thru,delivery_area,audit_status,created_date,modified_date,remark
+		 )values(
+		 	#{supplier_id}, #{supplier_name}, #{area_id},#{address},#{contact_person},#{introducer},#{contact_tel},#{title}, #{desc1}, #{pic_info}, #{category},#{specification},
+		 	#{pack},#{manufacturer},#{label},#{market_price},#{settled_price},#{stock_qty},#{min_buy_qty},#{max_buy_qty},#{valid_thru},#{delivery_area},#{audit_status},#{created_date},#{modified_date},#{remark}
+		 )
+	</insert>
+	
+	<!-- 修改推荐商品信息-->
+	<update id="updatePreSupplier" parameterType="PreSupplier">
+		update ed_pre_supplier
+		<set>
+			<if test="title != null and title != ''">
+				title=#{title},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1=#{desc1},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id=#{area_id},
+			</if>
+			<if test="label != null and label != ''">
+				label=#{label},
+			</if>
+			<if test="category != null and category != ''">
+				category=#{category},
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				contact_person=#{contact_person},
+			</if>
+			<if test="introducer != null and introducer != ''">
+			    introducer=#{introducer},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel=#{contact_tel},
+			</if>
+			<if test="pic_info != null and pic_info != ''">
+				pic_info=#{pic_info},
+			</if>
+			<if test="logistics != null and logistics != ''">
+				logistics=#{logistics},
+			</if>
+			<if test="audit_status != null and audit_status != ''">
+				audit_status=#{audit_status},
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				modified_date=#{modified_date},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark=#{remark},
+			</if>
+		</set>
+		where supplier_id=#{supplier_id}
+	</update>
+	<!--查询推荐过的商品信息-->
+	<select  id="selectPreSupplierList" parameterType="Map" resultType="PreSupplier" >
+		<choose>
+			<when test="audit_status == 'assign'"> 
+			    select <include refid="query_column_list" />
+		        from ed_pre_supplier es left join ed_area ea on es.area_id = ea.area_id 
+				where es.audit_status = #{audit_status} and  es.contact_tel = #{contact_tel}
+			</when>
+			<otherwise>
+			    select <include refid="queryGlobal_column_list" />
+		        from ed_pre_supplier es left join ed_area ea on es.area_id = ea.area_id 
+				left join ed_pre_supplier_audit_flow ef on es.supplier_id = ef.supplier_id
+		        where es.audit_status = #{audit_status} and ef.result = #{audit_status} and es.contact_tel = #{contact_tel}
+			</otherwise>
+		</choose>
+		order by es.created_date desc,es.modified_date desc
+    </select>
+	
+	<!--验证商户是否推荐过商品-->
+	<select  id="selectPreListByMobile" parameterType="String" resultType="PreSupplier" >
+		  select <include refid="query_column_list" />
+	       from ed_pre_supplier es left join ed_area ea on es.area_id = ea.area_id  where contact_tel =#{contact_tel}
+	</select>
+	
+	
+	<select  id="selectPreListBySupplierId" parameterType="String" resultType="PreSupplier" >
+		  select <include refid="base_column_list" />
+	       from ed_pre_supplier where supplier_id =#{supplier_id}
+	</select>
+	
+	<select  id="selectAllPreList" parameterType="String" resultType="PreSupplier" >
+		  select <include refid="base_column_list" />
+	       from ed_pre_supplier where contact_tel =#{contact_tel} order by created_date desc
+	</select>
+	
+	
+</mapper>

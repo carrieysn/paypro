@@ -1,0 +1,384 @@
+package com.meitianhui.supplierCentre.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.meitianhui.platform.constant.CommonConstant;
+import com.meitianhui.platform.entity.Page;
+import com.meitianhui.platform.entity.ResultVO;
+import com.meitianhui.platform.exception.PlatformApiException;
+import com.meitianhui.platform.utils.IDUtil;
+import com.meitianhui.platform.utils.PlatformApiUtil;
+import com.meitianhui.platform.utils.StringUtil;
+import com.meitianhui.supplierCentre.constant.PreGoodConstant;
+import com.meitianhui.supplierCentre.entity.AppEnum;
+import com.meitianhui.supplierCentre.entity.GoodsCategoryEnum;
+import com.meitianhui.supplierCentre.entity.PreSupplier;
+import com.meitianhui.supplierCentre.entity.SessionSupplier;
+import com.meitianhui.supplierCentre.service.PreSupplierService;
+import com.meitianhui.supplierCentre.service.SupplierService;
+import com.meitianhui.supplierCentre.util.BaseApiUtil;
+import com.meitianhui.supplierCentre.util.DataUtil;
+import com.meitianhui.supplierCentre.util.SupplierActionHelper;
+
+/***
+ * 推荐商品控制层
+ * 
+ */
+@Controller
+@RequestMapping("presupplier")
+public class PreSupplierController {
+	
+	private Logger logger = Logger.getLogger(PreSupplierController.class);
+	
+	@Autowired
+	private PreSupplierService preSupplierService;
+	
+	@Autowired
+	private SupplierService supplierService;
+
+	
+
+    /**
+     * 推荐商品
+     * @param request
+     * @return
+     */
+	@RequestMapping("recommend")
+	public String recommend(HttpServletRequest request,@RequestParam(required= false) String supplier_id){
+		try{
+			if(!StringUtil.isEmpty(supplier_id)){
+				PreSupplier preSupplier = preSupplierService.selectBasalGoods(supplier_id);
+				try{
+				    JSONObject introducer = JSONObject.parseObject(preSupplier.getIntroducer());
+					if(null != introducer){
+						preSupplier.setIntroducer(introducer.getString("introducer"));
+						preSupplier.setIntroducerTel(introducer.getString("introducerTel"));
+					}
+				}catch(Exception e){
+					preSupplier.setIntroducerTel("");
+				}
+				request.setAttribute("preSupplier",preSupplier);
+			}
+			//类目列表信息
+			request.setAttribute("appEnumList", AppEnum.values());
+			//类型列表信息
+			request.setAttribute("categoryList", GoodsCategoryEnum.values());
+		} catch(Exception e){
+			logger.error("跳转进入新增推荐商品页面出错", e);
+		}
+		return "supplier/addGood";
+	}
+	
+	/**
+	 * 商家相关信息查看
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("list")
+	public String infos(HttpServletRequest request,HttpServletResponse response){
+		SessionSupplier user = SupplierActionHelper.getSessionUser(request);
+		if(null == user){
+			return "redirect:/login";
+		}
+	/*	String flag = request.getParameter("f");
+		request.setAttribute("key", flag);*/
+		return "personal/list";
+	}
+	
+	
+	/**
+	 * 商家相关信息查看
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("searchlist")
+	public @ResponseBody ResultVO<List<PreSupplier>> searchlist(HttpServletRequest request,@RequestParam String flag){
+		ResultVO<List<PreSupplier>> resultVo = new ResultVO<List<PreSupplier>>();
+		//查询推荐商品信息
+		List<PreSupplier> preSupplierList = null;
+		try {
+			SessionSupplier user = SupplierActionHelper.getSessionUser(request);
+			String search_status = "";
+			if(!StringUtil.isEmpty(search_status)){
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("contact_tel", user.getContact_tel());
+				params.put("audit_status", search_status);
+				preSupplierList = preSupplierService.queryPreSupplierList(params);
+			}else{
+				preSupplierList = preSupplierService.selectAllPreList(user.getContact_tel());
+			}
+			if(null != preSupplierList && preSupplierList.size()>0){
+				for(PreSupplier perSupplier:preSupplierList){
+					Object obj = JSONArray.parse(perSupplier.getPic_info());
+					JSONObject logistics = JSONObject.parseObject(perSupplier.getLogistics());
+					if(null != logistics){
+						perSupplier.setLogisticCompany(logistics.getString("company"));
+						perSupplier.setLogisticCode(logistics.getString("bh"));
+					}
+					perSupplier.setPicList(obj);
+				}
+			}
+			 resultVo.setData(preSupplierList);
+			 resultVo.setStatus(CommonConstant.RESULT_STATE_SUSS);
+		} catch (Exception e) {
+			resultVo.setMsg(e instanceof PlatformApiException ? e.getMessage() : "查询商品信息失败！");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			logger.error("查询商品信息失败！", e);
+		}
+		return resultVo;
+	}
+	
+	/**
+	 * 保存商品信息
+	 * @param request
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping("save")
+	public @ResponseBody ResultVO<String> saveGoods(HttpServletRequest request, @RequestParam Map<String, Object> params){
+		ResultVO<String> resultVo = new ResultVO<String>();
+		try{
+			PreSupplier preSupplier = new PreSupplier();
+			if(StringUtil.isEmpty(PlatformApiUtil.formatStr(params.get("settled_price")))){
+				params.put("settled_price", 0);
+			}
+			if(StringUtil.isEmpty(PlatformApiUtil.formatStr(params.get("service_fee")))){
+				params.put("service_fee", 0);
+		    }
+			BeanUtils.populate(preSupplier, params);
+			String regEx = "[' ']+"; 
+			Pattern p = Pattern.compile(regEx);  
+			Matcher m = p.matcher(preSupplier.getLabel());
+			preSupplier.setLabel(m.replaceAll(",").trim());
+			String activeCode = DataUtil.getGoodsActiveCode();
+			preSupplier.setActive_code(activeCode);
+			JSONObject json = new JSONObject();
+			json.put("introducer", preSupplier.getIntroducer());
+			json.put("introducerTel", preSupplier.getIntroducerTel());
+			preSupplier.setIntroducer(json.toJSONString());
+			preSupplierService.saveOrUpdateGoods(preSupplier);
+			resultVo.setData(preSupplier.getSupplier_id()+","+activeCode);
+			resultVo.setStatus(CommonConstant.RESULT_STATE_SUSS);
+		} catch(Exception e){
+			resultVo.setMsg(e instanceof PlatformApiException ? e.getMessage() : "保存商品信息失败！");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			logger.error("保存商品信息失败！", e);
+		}
+		return resultVo;
+	}
+	
+	
+	@RequestMapping(value="logistic", method = RequestMethod.POST)
+	public @ResponseBody ResultVO<Object> logistic(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required=true) String supplier_id, @RequestParam(required=true) String company,@RequestParam(required=true) String bh){
+		ResultVO<Object> resultVo = new ResultVO<Object>();
+		try{
+			PreSupplier preSupplier = new PreSupplier();
+			preSupplier.setSupplier_id(supplier_id);
+			JSONObject json = new JSONObject();
+			json.put("company", company);
+			json.put("bh", bh);
+			preSupplier.setLogistics(json.toJSONString());
+			preSupplier.setAudit_status(PreGoodConstant.status_review);
+			preSupplierService.operateGoods(preSupplier);
+			resultVo.setMsg("保存物流信息成功！");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_SUSS);
+		} catch(Exception e){
+			resultVo.setMsg(e instanceof PlatformApiException ? e.getMessage() : "保存物流信息失败！");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			logger.error("保存物流信息失败！", e);
+		}
+		return resultVo;
+	}
+	
+	
+	
+	@RequestMapping("pageList")
+	public @ResponseBody ResultVO<Page> queryAuditListPage(HttpServletRequest request, @RequestParam(required=true) String contact_tel,
+			@RequestParam int pageNum, @RequestParam int pageSize){
+		ResultVO<Page> resultVo = new ResultVO<Page>();
+		try {
+			Page page = preSupplierService.selectPagePreList(pageNum, pageSize, contact_tel);
+			resultVo.setData(page);
+			resultVo.setMsg("分页查询商品信息列表成功");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_SUSS);
+		} catch (Exception e) {
+			resultVo.setMsg("分页查询商品信息列表失败");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			logger.info("分页查询商品信息列表失败",e);
+		}
+		return resultVo;
+	}
+	
+	@RequestMapping("detail")
+	public String detailPreSupplier(HttpServletRequest request, HttpServletResponse response, @RequestParam(required= true) String supplier_id) {
+		try{
+			PreSupplier preSupplier = preSupplierService.queryDetailPreSupplier(supplier_id);
+			if(null != preSupplier){
+				preSupplier.setDetailPath(PreGoodConstant.DEFAULTCATE);
+				SessionSupplier defaultUser = setSessionUser(request,response,preSupplier);
+				//判断是否是供应商
+				boolean isExists = BaseApiUtil.validAccountExists(preSupplier.getContact_tel());
+				if(isExists){
+					Map<String, Object> userInfo = supplierService.selectSupplierByTel(preSupplier.getContact_tel());
+					defaultUser.setServiceName(PlatformApiUtil.formatStr(userInfo.get("name")));
+					defaultUser.setMobile(PlatformApiUtil.formatStr(userInfo.get("mobile")));
+				    String path = PlatformApiUtil.formatStr(userInfo.get("path"));
+				    String addressPath = path.replaceAll(",", "")+PlatformApiUtil.formatStr(userInfo.get("address"));
+				    preSupplier.setDetailPath(addressPath);
+				}
+				SupplierActionHelper.setSessionUser(response, defaultUser);
+				formatDetail(request,preSupplier);
+				return "personal/detail";
+			}
+		} catch(Exception e){
+			logger.error("加载商品详情信息失败！", e);
+		}
+		return "redirect:list";
+	}
+
+    private void formatDetail(HttpServletRequest request, PreSupplier preSupplier) {
+		if(!StringUtils.isEmpty(preSupplier.getPic_info())){
+			JSONArray picInfoList  =JSONArray.parseArray(preSupplier.getPic_info());
+			request.setAttribute("picInfoList",picInfoList);
+		}
+		if(!StringUtils.isEmpty(preSupplier.getPic_detail_info())){
+			try{
+				JSONArray picDetailList  =JSONArray.parseArray(preSupplier.getPic_detail_info());
+				request.setAttribute("picDetailInfoList",picDetailList);
+			}catch(Exception e){
+				request.setAttribute("picDetailInfoList",null);
+			}
+		}
+		if(StringUtils.isNotEmpty(preSupplier.getIntroducer())){
+			try{
+			    JSONObject introducer = JSONObject.parseObject(preSupplier.getIntroducer());
+				if(null != introducer){
+					preSupplier.setIntroducer(introducer.getString("introducer"));
+					preSupplier.setIntroducerTel(introducer.getString("introducerTel"));
+				}
+			}catch(Exception e){
+				preSupplier.setIntroducerTel("");
+			}
+		}
+		preSupplier.setAreaPath(preSupplier.getPath());
+		String path = preSupplier.getPath().replaceAll(",", "");
+		preSupplier.setPath(path);
+		List<String> labels = new ArrayList<String>();
+		//格式化标签
+		if(StringUtils.isNotEmpty(preSupplier.getLabel())){
+		    String regex = "　|,|，|\\s+";
+		    String[] array = preSupplier.getLabel().split(regex);
+			if(null != array){
+				for(int i=0;i<array.length;i++){
+					if(!StringUtil.isEmpty(array[i])){
+					  labels.add(array[i]);
+					}
+				}
+			}
+		}
+		if(preSupplier.getAudit_status().equals(PreGoodConstant.status_fail)){
+			//类目列表信息
+			request.setAttribute("appEnumList", AppEnum.values());
+		}
+		request.setAttribute("labels",labels);
+		request.setAttribute("preSupplier", preSupplier);
+	} 
+
+
+	@RequestMapping(value="valRecomm", method = RequestMethod.POST)
+	public @ResponseBody ResultVO<Object> valRecomm(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required=true) String pic_url,@RequestParam(required=false) String supplier_id){
+		ResultVO<Object> resultVo = new ResultVO<Object>();
+		try{
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("supplier_id", supplier_id);
+			params.put("pic_url", pic_url);
+			List<PreSupplier> list = preSupplierService.selectSamePreSupplierList(params);
+			if(null != list && list.size()>0){
+				resultVo.setMsg("商品已经被报名!");
+				resultVo.setStatus(CommonConstant.RESULT_STATE_SUSS);
+			}else{
+				resultVo.setMsg("商品未报名!");
+				resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			}
+		} catch(Exception e){
+			resultVo.setMsg(e instanceof PlatformApiException ? e.getMessage() : "查询相同商品信息失败！");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			logger.error("查询相同商品信息失败！", e);
+		}
+		return resultVo;
+	}
+	
+
+	@RequestMapping("edit")
+	public @ResponseBody ResultVO<String> editGoods(HttpServletRequest request, @RequestParam Map<String, Object> params){
+		ResultVO<String> resultVo = new ResultVO<String>();
+		try{
+			PreSupplier preSupplier = new PreSupplier();
+			if(StringUtil.isEmpty(PlatformApiUtil.formatStr(params.get("settled_price")))){
+				params.put("settled_price", 0);
+			}
+			if(StringUtil.isEmpty(PlatformApiUtil.formatStr(params.get("service_fee")))){
+				params.put("service_fee", 0);
+		    }
+			BeanUtils.populate(preSupplier, params);
+			String regEx = "[' ']+";
+			Pattern p = Pattern.compile(regEx);  
+			Matcher m = p.matcher(preSupplier.getLabel());
+			preSupplier.setLabel(m.replaceAll(",").trim());
+			preSupplier.setAudit_status(PreGoodConstant.status_trial);
+			JSONObject logistic = new JSONObject();
+			logistic.put("company", preSupplier.getLogisticCompany());
+			logistic.put("bh", preSupplier.getLogisticCode());
+			preSupplier.setLogistics(logistic.toJSONString());
+			JSONObject introducer = new JSONObject();
+			introducer.put("introducer", preSupplier.getIntroducer());
+			introducer.put("introducerTel", preSupplier.getIntroducerTel());
+			preSupplier.setIntroducer(introducer.toJSONString());
+			preSupplierService.editGoods(preSupplier);
+			resultVo.setData(preSupplier.getSupplier_id());
+			resultVo.setStatus(CommonConstant.RESULT_STATE_SUSS);
+		} catch(Exception e){
+			resultVo.setMsg(e instanceof PlatformApiException ? e.getMessage() : "修改商品信息失败！");
+			resultVo.setStatus(CommonConstant.RESULT_STATE_FAIL);
+			logger.error("修改商品信息失败！", e);
+		}
+		return resultVo;
+	}
+	
+	
+	private SessionSupplier setSessionUser(HttpServletRequest request, HttpServletResponse response,PreSupplier preSupplier) {
+		//3、验证账号是否是供应商
+			SessionSupplier user = SupplierActionHelper.getSessionUser(request);
+			if(null == user){
+				String path = preSupplier.getPath().replaceAll(",", "")+preSupplier.getAddress();
+				SessionSupplier defaultUser = new SessionSupplier(IDUtil.getUUID(),preSupplier.getSupplier_name(),preSupplier.getContact_tel(),path,preSupplier.getContact_person());
+			    return defaultUser;
+			}else{
+				return user;
+			}
+		
+	}
+
+}

@@ -1,0 +1,28 @@
+package com.meitianhui.supplierCentre.service;
+
+import java.util.List;
+import java.util.Map;
+import com.meitianhui.platform.exception.PlatformApiException;
+import com.meitianhui.supplierCentre.entity.AuditFlow;
+import com.meitianhui.supplierCentre.entity.PreSupplier;
+
+public interface PreSupplierService {
+	
+	/**
+	 * 根据条件查询推荐商品明细列表
+	 * @param audit_status
+	 * @return
+	 */
+	public List<PreSupplier> queryPreSupplierList(Map<String,Object> map);
+	/**
+	 * 验证商户是否推荐过商品
+	 * @param mobile
+	 * @return
+	 */
+	public List<PreSupplier> selectPreListByMobile(String mobile);
+	
+	
+	public PreSupplier saveOrUpdateGoods(PreSupplier preSupplier) throws PlatformApiException;
+	
+	public void operateGoods(PreSupplier preSupplier,AuditFlow auditFlow) throws PlatformApiException;
+}

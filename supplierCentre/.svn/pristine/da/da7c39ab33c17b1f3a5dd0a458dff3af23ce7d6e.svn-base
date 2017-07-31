@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/common/layout/common.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>每天惠商家中心-招商</title>    
+    <link type="text/css" href="${ctx}/common/static/css/base.css" rel="stylesheet" />
+    <link type="text/css" href="${ctx}/common/static/css/index.css" rel="stylesheet" />
+</head>
+
+<body>
+<div class="headers">
+		<a href="#" class="logo">商家中心</a>
+		<ul class="nav">
+			<li><a href="${ctx}/">首页</a></li>
+			<li><a href="${ctx}/zxindex">资讯</a></li>
+			<li class="sel"><a href="${ctx}/zsindex">招商</a></li>
+			<li><a href="#">供应商登录</a></li>
+		</ul>
+	</div>
+	
+	<div class="banner-wrap"><img src="${ctx}/common/static/images/banner3.jpg"></div>
+
+	<div class="content">
+		<ul class="merchants top50">
+			<li>
+				<img src="${ctx}/common/static/images/zs1.jpg">
+				<p class="btn-list">
+					<a href="${ctx}/presupplier/recommend" class="tj">推荐商品</a>
+					<a href="${ctx}/login">查看状态</a>
+				</p>
+			</li>
+			<li>
+				<img src="${ctx}/common/static/images/zs2.jpg">
+				<p class="btn-list">
+					<a href="${ctx}/presupplier/recommend" class="tj-l">推荐商品</a>
+					<a href="${ctx}/login">查看状态</a>
+				</p>
+			</li>
+		</ul>
+	</div>
+<%@ include file="/common/layout/footer.jsp"%>
+
